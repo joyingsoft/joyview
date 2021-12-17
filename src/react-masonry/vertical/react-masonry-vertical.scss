@@ -1,0 +1,14 @@
+.masonry-v {
+  display: flex;
+  flex-direction: row;
+
+  &__c {
+    display: flex;
+    flex-direction: column;
+
+    img {
+      width: 100%;
+      display: block;
+    }
+  }
+}
