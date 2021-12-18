@@ -12,7 +12,8 @@ export type Breakpoints =
 
 /**
  *
- * @param breakpointInPx use pre defined breakpoint in mediaQueryBreakpoints if possible.
+ * @param breakpointInPx
+ *  use pre defined breakpoint in mediaQueryBreakpoints if possible.
  */
 export const useBreakpoint = (breakpointInPx: Breakpoints | number) => {
   const [isLarger, setIsLarger] = useState(window.innerWidth > breakpointInPx);
@@ -23,8 +24,6 @@ export const useBreakpoint = (breakpointInPx: Breakpoints | number) => {
     const handleMediaQueryChange = (e: MediaQueryListEvent) => {
       setIsLarger(e.matches);
     };
-    // https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList/addListener
-    // Deprecated
     mediaQuery.addEventListener('change', handleMediaQueryChange);
     return () => {
       mediaQuery.removeEventListener('change', handleMediaQueryChange);

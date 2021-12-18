@@ -1,6 +1,6 @@
 import React, { FC, ReactNode, useEffect, useState } from 'react';
 import { mediaQueryBreakpoints } from '../../hooks/use-breakpoint';
-import './react-masonry-vertical.scss';
+import './masonry-vertical.scss';
 
 type BreakpointValue = number;
 type NumberOfColumns = number;
@@ -35,7 +35,7 @@ const getDefaultBreakpointCols = () => {
   return map;
 };
 
-const ReactMasonryVerticalColumns: FC<{
+const MasonryVerticalColumns: FC<{
   childrenInColumns: (
     | React.ReactChild
     | React.ReactFragment
@@ -76,7 +76,7 @@ const getChildrenInColumns = (columns: number, children: React.ReactNode) => {
   return columnsChildren;
 };
 
-export const ReactMasonryVertical: FC<Props> = ({
+export const MasonryVertical: FC<Props> = ({
   breakpointCols = getDefaultBreakpointCols(),
   classNames = 'masonry-v',
   columnClassNames = 'masonry-v__c',
@@ -115,7 +115,7 @@ export const ReactMasonryVertical: FC<Props> = ({
 
   return (
     <div className={classNames}>
-      <ReactMasonryVerticalColumns
+      <MasonryVerticalColumns
         childrenInColumns={getChildrenInColumns(showCols, children)}
         classNames={columnClassNames}
       />
