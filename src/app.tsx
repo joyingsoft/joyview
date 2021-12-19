@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import { AppContextProvider } from './context/app-context-provider';
 import { AppRouter } from './router/app-router';
 
 const getAppBasename = (appPath = 'joying-image-viewer') =>
@@ -7,8 +8,10 @@ const getAppBasename = (appPath = 'joying-image-viewer') =>
 
 export const App: FC = () => {
   return (
-    <BrowserRouter basename={getAppBasename()}>
-      <AppRouter />
-    </BrowserRouter>
+    <AppContextProvider>
+      <BrowserRouter basename={getAppBasename()}>
+        <AppRouter />
+      </BrowserRouter>
+    </AppContextProvider>
   );
 };

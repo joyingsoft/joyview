@@ -18,16 +18,27 @@ export const mediaSizeBreakpoints = {
   [MediaSizeName.xxl]: 1440,
 } as const;
 
+/**
+ *
+ * @param breakpoints [MediaSizeName | string, number][]; an ordered list
+ *                    contains list element break point name (at index 0)
+ *                    and break point (px value at index 1)
+ */
 export const useMediaSize = (
-  breakpoints: [MediaSizeName, number][] = Object.entries(
+  breakpoints: [MediaSizeName | string, number][] = Object.entries(
     mediaSizeBreakpoints,
-  ) as [MediaSizeName, number][],
+  ),
 ) => {
-  const [mediaSize, setMediaSize] = useState<MediaSizeName>(MediaSizeName.xs);
+  const [mediaSize, setMediaSize] = useState<MediaSizeName | string>(
+    breakpoints[0][0],
+  );
 
-  const mediaQueries = new Map<MediaSizeName, MediaQueryList>();
+  const mediaQueries = new Map<MediaSizeName | string, MediaQueryList>();
 
-  const handleMediaQueryChange = (name: MediaSizeName, matches: boolean) => {
+  const handleMediaQueryChange = (
+    name: MediaSizeName | string,
+    matches: boolean,
+  ) => {
     if (matches) {
       setMediaSize(name);
     }

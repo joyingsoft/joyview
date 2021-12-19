@@ -51,7 +51,7 @@ export const MasonryVertical: FC<{
   /**
    * Number of columns at each Media size.
    */
-  mediaSizeCols?: Map<MediaSizeName, number>;
+  mediaSizeCols?: Map<MediaSizeName | string, number>;
 
   /**
    * ReactMasonryVertical container class names.
@@ -65,7 +65,7 @@ export const MasonryVertical: FC<{
 
   children: ReactNode;
 }> = ({
-  mediaSizeCols = new Map<MediaSizeName, number>(
+  mediaSizeCols = new Map<MediaSizeName | string, number>(
     Object.values(MediaSizeName).map((name, index) => [name, index + 1]),
   ),
   classNames = 'masonry-v',
