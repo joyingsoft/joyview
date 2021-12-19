@@ -5,10 +5,14 @@ import {
 } from 'browser-fs-access';
 import { FC, useState } from 'react';
 import { FileImage } from '../../components/file-image';
-import { MasonryVertical } from '../../masonry/vertical/masonry-vertical';
+import { MasonryVertical } from '../../components/masonry/masonry-vertical';
+import { useMediaSize } from '../../hooks/use-media-size';
+import { isMediaTypeImage } from '../../utils/file-utils';
 
 export const Home: FC = () => {
   const [images, setImages] = useState<FileWithDirectoryHandle[]>([]);
+  const ms = useMediaSize();
+
   const handleBtnClick = async () => {
     const options = {
       // Set to `true` to recursively open files in all subdirectories,
@@ -21,14 +25,13 @@ export const Home: FC = () => {
       // skipDirectory: (entry) => entry.name[0] === '.',
     };
 
-    const blobs = await directoryOpen(options);
-    console.log(blobs);
-    setImages(blobs);
+    const fileHandles = await directoryOpen(options);
+    setImages(fileHandles.filter((f) => isMediaTypeImage(f.type)));
   };
 
   return (
     <div>
-      <h1>Home</h1>
+      <h1>Home {ms}</h1>
       <button onClick={handleBtnClick}>directory picker</button>
       <MasonryVertical>
         {images.map((img) => (
