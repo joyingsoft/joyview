@@ -1,17 +1,25 @@
 import { directoryOpen, WellKnownDirectory } from 'browser-fs-access';
-import { createContext, FC, ReactNode, useState } from 'react';
+import { createContext, FC, ReactNode, useEffect, useState } from 'react';
 import { isMediaTypeImage } from '../utils/file-utils';
+
+export enum AppThemeEnum {
+  light = 'light',
+  dark = 'dark',
+}
 
 type AppContextProps = {
   getFilesEvent?: () => void;
+  updateThemeEvent?: (theme: AppThemeEnum) => void;
 };
 
 type AppContextStates = {
   imageFiles: File[];
+  theme: AppThemeEnum;
 };
 
 export const AppContext = createContext<AppContextStates & AppContextProps>({
   imageFiles: [],
+  theme: AppThemeEnum.light,
 });
 
 export const AppContextProvider: FC<
@@ -20,6 +28,7 @@ export const AppContextProvider: FC<
   }
 > = ({ children }) => {
   const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [appTheme, setAppTheme] = useState<AppThemeEnum>(AppThemeEnum.light);
 
   const getFilesHandle = async () => {
     const options = {
@@ -37,8 +46,32 @@ export const AppContextProvider: FC<
     setImageFiles(fileHandles.filter((f) => isMediaTypeImage(f.type)));
   };
 
+  const updateThemeHandle = (theme: AppThemeEnum) => {
+    setAppTheme(theme);
+  };
+
+  useEffect(() => {
+    updateThemeHandle(
+      window.matchMedia &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? AppThemeEnum.dark
+        : AppThemeEnum.light,
+    );
+  }, []);
+
+  useEffect(() => {
+    document.body.setAttribute('app-theme', appTheme);
+  }, [appTheme]);
+
   return (
-    <AppContext.Provider value={{ imageFiles, getFilesEvent: getFilesHandle }}>
+    <AppContext.Provider
+      value={{
+        imageFiles,
+        theme: appTheme,
+        getFilesEvent: getFilesHandle,
+        updateThemeEvent: updateThemeHandle,
+      }}
+    >
       {children}
     </AppContext.Provider>
   );

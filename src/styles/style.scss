@@ -1,11 +1,47 @@
+@import './variables';
+@import './theme.scss';
+
 html,
 body {
   margin: 0;
   height: 100%;
 }
 
+body {
+  background-color: var(--theme-bg);
+
+  color: var(--theme-text-secondary);
+}
+
 #root {
   display: flex;
   flex-direction: column;
   height: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  color: var(--theme-text-primary);
+}
+
+button {
+  font-size: 1.1rem;
+  color: $color-brilliant-white;
+  background-color: var(--theme-primary-dark);
+  border-style: solid;
+  border-color: var(--theme-primary-dark);
+  border-radius: 0.5rem;
+
+  cursor: pointer;
+  padding: 0.4rem 0.8rem;
+
+  &:hover,
+  &:focus,
+  &:active {
+    border-color: var(--theme-primary-light);
+    filter: contrast(120%);
+  }
 }

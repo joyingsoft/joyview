@@ -1,0 +1,23 @@
+@import './variables';
+
+[app-theme='dark'] {
+  --theme-text-primary: rgba(255, 255, 255, 0.87);
+  --theme-text-secondary: rgba(255, 255, 255, 0.6);
+  --theme-text-disabled: rgba(255, 255, 255, 0.38);
+  --theme-bg: #{$color-dark-grey};
+  --theme-primary: #{$color-french-blue};
+  --theme-primary-dark: #{$color-classic-blue};
+  --theme-primary-light: #{$color-cerulean};
+  --theme-accent: #{$color-living-coral};
+}
+
+[app-theme='light'] {
+  --theme-text-primary: rgba(0, 0, 0, 0.87);
+  --theme-text-secondary: rgba(0, 0, 0, 0.6);
+  --theme-text-disabled: rgba(0, 0, 0, 0.38);
+  --theme-bg: #{$color-brilliant-white};
+  --theme-primary: #{$color-greenery};
+  --theme-primary-dark: #{$color-mint};
+  --theme-primary-light: #{$color-green-ash};
+  --theme-accent: #{$color-ultra-violet};
+}
