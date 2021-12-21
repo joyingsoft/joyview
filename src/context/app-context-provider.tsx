@@ -10,18 +10,21 @@ export enum AppThemeEnum {
 type AppContextProps = {
   getFilesEvent?: () => void;
   updateThemeEvent?: (theme: AppThemeEnum) => void;
+  sidebarOpenEvent?: (isOpen: boolean) => void;
 };
 
 type AppContextStates = {
   imageFiles: File[];
   theme: AppThemeEnum;
   isLoading: boolean;
+  isSidebarOpen: boolean;
 };
 
 export const AppContext = createContext<AppContextStates & AppContextProps>({
   imageFiles: [],
   theme: AppThemeEnum.light,
   isLoading: false,
+  isSidebarOpen: false,
 });
 
 export const AppContextProvider: FC<
@@ -32,6 +35,7 @@ export const AppContextProvider: FC<
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [appTheme, setAppTheme] = useState<AppThemeEnum>(AppThemeEnum.light);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
 
   const getFilesHandle = async () => {
     setIsLoading(true);
@@ -78,9 +82,11 @@ export const AppContextProvider: FC<
       value={{
         imageFiles,
         isLoading,
+        isSidebarOpen,
         theme: appTheme,
         getFilesEvent: getFilesHandle,
         updateThemeEvent: updateThemeHandle,
+        sidebarOpenEvent: (isOpen) => setIsSidebarOpen(isOpen),
       }}
     >
       {children}

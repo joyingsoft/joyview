@@ -7,7 +7,7 @@ import './welcome-page.scss';
 export const WelcomePage: FC = () => {
   const { getFilesEvent, isLoading } = useContext(AppContext);
   return (
-    <div className="jiv-welcome m-lg p-lg">
+    <div className="welcome-page m-lg p-lg">
       <h1>Joying Image Viewer</h1>
       <button onClick={getFilesEvent} className="m-lg">
         <FontAwesomeIcon
