@@ -1,47 +1,37 @@
 @use 'sass:map';
 @import './variables';
 
-@mixin create-spaces($name, $space) {
-  .p-#{$name} {
-    padding: $space;
-  }
-  .p-t-#{$name} {
-    padding-top: $space;
-  }
-  .p-b-#{$name} {
-    padding-bottom: $space;
-  }
-  .p-r-#{$name} {
-    padding-right: $space;
-  }
-  .p-l-#{$name} {
-    padding-left: $space;
-  }
-  .m-t-#{$name} {
-    margin-top: $space;
-  }
-  .m-b-#{$name} {
-    margin-bottom: $space;
-  }
-  .m-r-#{$name} {
-    margin-right: $space;
-  }
-  .m-l-#{$name} {
-    margin-left: $space;
-  }
-  .m-#{$name} {
-    margin: $space;
+@mixin create-space($name, $space) {
+  @each $pm-s, $pm-name in ('p': 'padding', 'm': 'margin') {
+    @each $pm-sub-s,
+      $pm-sub-name
+        in (
+          '': '',
+          '-t': '-top',
+          '-b': '-bottom',
+          '-r': '-right',
+          '-l': '-left'
+        )
+    {
+      .#{$pm-s}#{$pm-sub-s}-#{$name} {
+        #{$pm-name}#{$pm-sub-name}: $space;
+      }
+    }
   }
 }
 
-@each $name, $space in map.get($spacing, 'xs') {
-  @include create-spaces($name, $space);
+@mixin create-spaces($name) {
+  @each $sname, $space in $spaces {
+    @include create-space($sname, $space * map.get($space-percents, $name));
+  }
 }
 
 @each $name, $breakpoint in $breakpoints {
-  @media screen and (min-width: $breakpoint) {
-    @each $sname, $space in map.get($spacing, $name) {
-      @include create-spaces($sname, $space);
+  @if $name == xs {
+    @include create-spaces($name);
+  } @else {
+    @media screen and (min-width: $breakpoint) {
+      @include create-spaces($name);
     }
   }
 }
