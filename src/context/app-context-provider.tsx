@@ -15,11 +15,13 @@ type AppContextProps = {
 type AppContextStates = {
   imageFiles: File[];
   theme: AppThemeEnum;
+  isLoading: boolean;
 };
 
 export const AppContext = createContext<AppContextStates & AppContextProps>({
   imageFiles: [],
   theme: AppThemeEnum.light,
+  isLoading: false,
 });
 
 export const AppContextProvider: FC<
@@ -29,8 +31,10 @@ export const AppContextProvider: FC<
 > = ({ children }) => {
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [appTheme, setAppTheme] = useState<AppThemeEnum>(AppThemeEnum.light);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const getFilesHandle = async () => {
+    setIsLoading(true);
     const options = {
       // Set to `true` to recursively open files in all subdirectories,
       // defaults to `false`.
@@ -42,8 +46,14 @@ export const AppContextProvider: FC<
       // skipDirectory: (entry) => entry.name[0] === '.',
     };
 
-    const fileHandles = await directoryOpen(options);
-    setImageFiles(fileHandles.filter((f) => isMediaTypeImage(f.type)));
+    try {
+      const fileHandles = await directoryOpen(options);
+      setImageFiles(fileHandles.filter((f) => isMediaTypeImage(f.type)));
+    } catch (error) {
+      // e.g. : DOMException: The user aborted a request.
+      console.log('err ', error);
+    }
+    setIsLoading(false);
   };
 
   const updateThemeHandle = (theme: AppThemeEnum) => {
@@ -67,6 +77,7 @@ export const AppContextProvider: FC<
     <AppContext.Provider
       value={{
         imageFiles,
+        isLoading,
         theme: appTheme,
         getFilesEvent: getFilesHandle,
         updateThemeEvent: updateThemeHandle,

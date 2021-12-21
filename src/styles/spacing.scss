@@ -1,0 +1,47 @@
+@use 'sass:map';
+@import './variables';
+
+@mixin create-spaces($name, $space) {
+  .p-#{$name} {
+    padding: $space;
+  }
+  .p-t-#{$name} {
+    padding-top: $space;
+  }
+  .p-b-#{$name} {
+    padding-bottom: $space;
+  }
+  .p-r-#{$name} {
+    padding-right: $space;
+  }
+  .p-l-#{$name} {
+    padding-left: $space;
+  }
+  .m-t-#{$name} {
+    margin-top: $space;
+  }
+  .m-b-#{$name} {
+    margin-bottom: $space;
+  }
+  .m-r-#{$name} {
+    margin-right: $space;
+  }
+  .m-l-#{$name} {
+    margin-left: $space;
+  }
+  .m-#{$name} {
+    margin: $space;
+  }
+}
+
+@each $name, $space in map.get($spacing, 'xs') {
+  @include create-spaces($name, $space);
+}
+
+@each $name, $breakpoint in $breakpoints {
+  @media screen and (min-width: $breakpoint) {
+    @each $sname, $space in map.get($spacing, $name) {
+      @include create-spaces($sname, $space);
+    }
+  }
+}

@@ -1,10 +1,12 @@
 @import './variables';
 @import './theme.scss';
+@import './spacing.scss';
 
 html,
 body {
   margin: 0;
   height: 100%;
+  font-family: $font-family-sans-serif;
 }
 
 body {

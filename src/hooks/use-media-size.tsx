@@ -11,11 +11,11 @@ export enum MediaSizeName {
 
 export const mediaSizeBreakpoints = {
   [MediaSizeName.xs]: 0,
-  [MediaSizeName.sm]: 480,
+  [MediaSizeName.sm]: 576,
   [MediaSizeName.md]: 768,
-  [MediaSizeName.lg]: 1024,
-  [MediaSizeName.xl]: 1280,
-  [MediaSizeName.xxl]: 1440,
+  [MediaSizeName.lg]: 992,
+  [MediaSizeName.xl]: 1200,
+  [MediaSizeName.xxl]: 1400,
 } as const;
 
 /**

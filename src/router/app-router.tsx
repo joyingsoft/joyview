@@ -1,11 +1,11 @@
 import { FC } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { Home } from '../pages/home/home';
+import { Main } from '../pages/main';
 
 export const AppRouter: FC = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home />}></Route>
+      <Route path="/" element={<Main />}></Route>
     </Routes>
   );
 };

@@ -28,3 +28,50 @@ $color-ash: #a09998;
 //    better readability on dark theme.
 // 2. material design recommends #121212 as dark theme surface color
 $color-dark-grey: #121212;
+
+$font-family-sans-serif: system-ui, -apple-system, 'Segoe UI', Roboto,
+  'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif,
+  'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+// Default xs
+$breakpoints: (
+  'sm': 576px,
+  'md': 768px,
+  'lg': 992px,
+  'xl': 1200px,
+  'xxl': 1400px,
+);
+
+// Default xs
+$spacing: (
+  'xs': (
+    'sm': 3px,
+    'md': 6px,
+    'lg': 9px,
+  ),
+  'sm': (
+    'sm': 4px,
+    'md': 8px,
+    'lg': 12px,
+  ),
+  'md': (
+    'sm': 5px,
+    'md': 9px,
+    'lg': 13px,
+  ),
+  'lg': (
+    'sm': 6px,
+    'md': 10px,
+    'lg': 14px,
+  ),
+  'xl': (
+    'sm': 7px,
+    'md': 11px,
+    'lg': 15px,
+  ),
+  'xxl': (
+    'sm': 8px,
+    'md': 12px,
+    'lg': 16px,
+  ),
+);
