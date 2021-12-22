@@ -7,6 +7,11 @@ export enum AppThemeEnum {
   dark = 'dark',
 }
 
+export enum AppViewEnum {
+  welcome = 'welcome',
+  masonryVertical = 'masonryVertical',
+}
+
 type AppContextProps = {
   getFilesEvent?: () => void;
   updateThemeEvent?: (theme: AppThemeEnum) => void;
@@ -16,16 +21,22 @@ type AppContextProps = {
 type AppContextStates = {
   imageFiles: File[];
   theme: AppThemeEnum;
+  view: AppViewEnum;
   isLoading: boolean;
   isSidebarOpen: boolean;
 };
 
-export const AppContext = createContext<AppContextStates & AppContextProps>({
+const appContextDefault: AppContextStates & AppContextProps = {
   imageFiles: [],
   theme: AppThemeEnum.light,
+  view: AppViewEnum.welcome,
   isLoading: false,
   isSidebarOpen: false,
-});
+};
+
+export const AppContext = createContext<AppContextStates & AppContextProps>(
+  appContextDefault,
+);
 
 export const AppContextProvider: FC<
   AppContextProps & {
@@ -33,9 +44,14 @@ export const AppContextProvider: FC<
   }
 > = ({ children }) => {
   const [imageFiles, setImageFiles] = useState<File[]>([]);
-  const [appTheme, setAppTheme] = useState<AppThemeEnum>(AppThemeEnum.light);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  const [theme, setTheme] = useState<AppThemeEnum>(appContextDefault.theme);
+  const [view, setView] = useState<AppViewEnum>(appContextDefault.view);
+  const [isLoading, setIsLoading] = useState<boolean>(
+    appContextDefault.isLoading,
+  );
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(
+    appContextDefault.isSidebarOpen,
+  );
 
   const getFilesHandle = async () => {
     setIsLoading(true);
@@ -60,12 +76,8 @@ export const AppContextProvider: FC<
     setIsLoading(false);
   };
 
-  const updateThemeHandle = (theme: AppThemeEnum) => {
-    setAppTheme(theme);
-  };
-
   useEffect(() => {
-    updateThemeHandle(
+    setTheme(
       window.matchMedia &&
         window.matchMedia('(prefers-color-scheme: dark)').matches
         ? AppThemeEnum.dark
@@ -74,8 +86,14 @@ export const AppContextProvider: FC<
   }, []);
 
   useEffect(() => {
-    document.body.setAttribute('app-theme', appTheme);
-  }, [appTheme]);
+    if (imageFiles && imageFiles.length > 0 && view === AppViewEnum.welcome) {
+      setView(AppViewEnum.masonryVertical);
+    }
+  }, [imageFiles]);
+
+  useEffect(() => {
+    document.body.setAttribute('app-theme', theme);
+  }, [theme]);
 
   return (
     <AppContext.Provider
@@ -83,9 +101,10 @@ export const AppContextProvider: FC<
         imageFiles,
         isLoading,
         isSidebarOpen,
-        theme: appTheme,
+        theme,
+        view,
         getFilesEvent: getFilesHandle,
-        updateThemeEvent: updateThemeHandle,
+        updateThemeEvent: (newTheme) => setTheme(newTheme),
         sidebarOpenEvent: (isOpen) => setIsSidebarOpen(isOpen),
       }}
     >

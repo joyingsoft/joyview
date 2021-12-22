@@ -28,7 +28,8 @@
   .sidebar {
     display: flex;
     flex-direction: column;
-    background-color: var(--theme-primary-dark);
+    background-color: var(--theme-bg);
+    box-shadow: $box-shadow;
     overflow-x: hidden;
     transition: $transition-collapse-width;
 
@@ -42,8 +43,7 @@
 
     @media screen and (min-width: map.get($breakpoints, 'lg')) {
       // push
-      max-height: 100%;
-      height: inherit;
+      height: auto;
       z-index: inherit;
       position: inherit;
     }
