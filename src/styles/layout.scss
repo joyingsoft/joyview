@@ -1,0 +1,84 @@
+@use 'sass:map';
+@import './variables';
+@import './theme.scss';
+@import './spacing.scss';
+
+.container {
+  height: 100%;
+  display: flex;
+
+  .bars {
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    margin: 1rem;
+    color: var(--theme-text-disabled);
+    transition: $transition-base;
+
+    cursor: pointer;
+
+    &:hover,
+    &:focus,
+    &:active {
+      color: var(--theme-text-primary);
+    }
+  }
+
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--theme-bg-secondary);
+    box-shadow: $box-shadow;
+    overflow-x: hidden;
+    transition: $transition-collapse-width;
+
+    // overlay
+    position: fixed;
+    z-index: 1;
+    height: 100%;
+    max-width: 100%;
+    width: 0;
+    left: 0;
+    top: 0;
+
+    &__open {
+      width: $sidebar-width;
+    }
+  }
+
+  .contents {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    margin-left: 0;
+    animation-name: removeSidebarWidth;
+    animation-duration: $animation-duration;
+    &__r {
+      @media screen and (min-width: map.get($breakpoints, 'lg')) {
+        // push content to right
+        margin-left: $sidebar-width;
+        animation-name: addSidebarWidth;
+        animation-duration: $animation-duration;
+      }
+    }
+  }
+
+  @keyframes addSidebarWidth {
+    from {
+      margin-left: 0;
+    }
+    to {
+      margin-left: $sidebar-width;
+    }
+  }
+  @keyframes removeSidebarWidth {
+    from {
+      margin-left: $sidebar-width;
+    }
+    to {
+      margin-left: 0;
+    }
+  }
+}
