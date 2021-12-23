@@ -8,7 +8,7 @@ export const Sidebar: FC = ({ children }) => {
   const { isSidebarOpen, sidebarOpenEvent } = useContext(AppContext);
 
   return (
-    <div className={`sidebar ${isSidebarOpen ? ' p-lg sidebar__open' : ''}`}>
+    <div className={`sidebar${isSidebarOpen ? ' p-lg sidebar__open' : ''}`}>
       <button
         className="m-md"
         onClick={() => sidebarOpenEvent && sidebarOpenEvent(false)}

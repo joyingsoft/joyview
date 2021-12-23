@@ -21,6 +21,7 @@ $color-raspberry-sorbet: #d2386c;
 $color-inkwell: #363945;
 $color-gray: #939597;
 $color-brilliant-white: #edf1ff;
+$toufu: #eae6da;
 $color-ash: #a09998;
 
 // Dark mode:
@@ -59,8 +60,10 @@ $space-percents: (
   xxl: 1,
 ) !default;
 
-$transition-base: all 0.25s ease-in-out !default;
-$transition-fade: opacity 0.2s linear !default;
-$transition-collapse: height 0.35s ease !default;
-$transition-collapse-width: width 0.35s ease !default;
-$box-shadow: 0 1px 1px 0 rgb(66 66 66 / 8%), 0 1px 3px 1px rgb(66 66 66 / 16%);
+$animation-duration: 0.35s !default;
+$transition-base: all $animation-duration ease-in-out !default;
+$transition-fade: opacity $animation-duration linear !default;
+$transition-collapse: height $animation-duration ease !default;
+$transition-collapse-width: width $animation-duration ease !default;
+$box-shadow: 0 1px 1px 0 rgb(66 66 66 / 8%), 0 1px 3px 1px rgb(66 66 66 / 16%) !default;
+$sidebar-width: 13rem !default;

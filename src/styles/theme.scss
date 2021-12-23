@@ -5,6 +5,7 @@
   --theme-text-secondary: rgba(255, 255, 255, 0.6);
   --theme-text-disabled: rgba(255, 255, 255, 0.38);
   --theme-bg: #{$color-dark-grey};
+  --theme-bg-secondary: #{$color-inkwell};
   --theme-primary: #{$color-french-blue};
   --theme-primary-dark: #{$color-classic-blue};
   --theme-primary-light: #{$color-cerulean};
@@ -16,6 +17,7 @@
   --theme-text-secondary: rgba(0, 0, 0, 0.6);
   --theme-text-disabled: rgba(0, 0, 0, 0.38);
   --theme-bg: #{$color-brilliant-white};
+  --theme-bg-secondary: #{$toufu};
   --theme-primary: #{$color-greenery};
   --theme-primary-dark: #{$color-mint};
   --theme-primary-light: #{$color-green-ash};
