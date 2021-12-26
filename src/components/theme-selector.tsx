@@ -11,7 +11,7 @@ export const ThemeSelector: FC = () => {
   };
 
   return (
-    <div className="theme-selector">
+    <div className="theme-selector p-md">
       <label>
         <input
           type="radio"

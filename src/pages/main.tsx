@@ -5,16 +5,24 @@ import { Contents } from '../components/layout/contents';
 import { Sidebar } from '../components/layout/sidebar';
 import { MasonryVertical } from '../components/masonry/masonry-vertical';
 import { AppContext, AppViewEnum } from '../context/app-context-provider';
+import { AppSpaceContext } from '../context/app-space-provider';
 import { WelcomePage } from './sub/welcome-page';
 
 const MainViewDispatcher: FC = () => {
   const { imageFiles, view } = useContext(AppContext);
+  const { imagePaddingPx } = useContext(AppSpaceContext);
+
   switch (view) {
     case AppViewEnum.masonryVertical:
       return (
-        <MasonryVertical>
+        <MasonryVertical cssProps={{ padding: `${imagePaddingPx}px` }}>
           {imageFiles.map((img) => (
-            <FileImage key={img.webkitRelativePath + img.name} file={img} />
+            <div
+              style={{ padding: `${imagePaddingPx}px` }}
+              key={img.webkitRelativePath + img.name}
+            >
+              <FileImage file={img} />
+            </div>
           ))}
         </MasonryVertical>
       );
