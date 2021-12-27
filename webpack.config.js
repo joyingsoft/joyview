@@ -15,14 +15,22 @@ module.exports = {
             },
             {
                 test: /\.(c|sc|sa)ss$/i,
-                use: [
-                    // Creates `style` nodes from JS strings
-                    // "style-loader",
-                    MiniCssExtractPlugin.loader, // instead of style-loader
-                    // Translates CSS into CommonJS
-                    'css-loader',
-                    // Compiles Sass to CSS
-                    'sass-loader',
+                use: [{
+                        loader: MiniCssExtractPlugin.loader,
+
+                    },
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            importLoaders: 1,
+                            modules: {
+                                mode: "icss",
+                            },
+                        },
+                    },
+                    {
+                        loader: 'sass-loader'
+                    },
                 ],
             },
         ],
