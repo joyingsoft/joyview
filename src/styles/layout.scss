@@ -27,8 +27,9 @@
   .sidebar {
     display: flex;
     flex-direction: column;
-    background-color: var(--theme-bg-secondary);
     box-shadow: $box-shadow;
+    box-sizing: border-box;
+    background-color: var(--theme-bg-secondary);
     overflow-x: hidden;
     transition: $transition-collapse-width;
 
@@ -57,33 +58,6 @@
     height: 100%;
     width: 100%;
     margin-left: 0;
-    animation-name: removeSidebarWidth;
-    animation-duration: $animation-duration;
-
-    &__r {
-      @media screen and (min-width: map.get($breakpoints, 'lg')) {
-        // push content to right
-        margin-left: $sidebar-width;
-        animation-name: addSidebarWidth;
-        animation-duration: $animation-duration;
-      }
-    }
-  }
-
-  @keyframes addSidebarWidth {
-    from {
-      margin-left: 0;
-    }
-    to {
-      margin-left: $sidebar-width;
-    }
-  }
-  @keyframes removeSidebarWidth {
-    from {
-      margin-left: $sidebar-width;
-    }
-    to {
-      margin-left: 0;
-    }
+    transition: $transition-base;
   }
 }
