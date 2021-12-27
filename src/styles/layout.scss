@@ -15,7 +15,6 @@
     margin: 1rem;
     color: var(--theme-text-disabled);
     transition: $transition-base;
-
     cursor: pointer;
 
     &:hover,
@@ -44,6 +43,11 @@
 
     &__open {
       width: $sidebar-width;
+    }
+
+    &__c {
+      display: flex;
+      flex-direction: column;
     }
   }
 
