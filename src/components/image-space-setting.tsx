@@ -10,6 +10,8 @@ export const ImageSpaceSetting: FC = () => {
     <RangeSlider
       name="imageSpacing"
       label="Image spacing:"
+      showValueInLabel
+      labelValuePostfix="px"
       value={imagePaddingPx}
       changeEvent={changeImagePaddingEvent}
       max={64}
