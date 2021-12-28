@@ -27,7 +27,15 @@ const getChildrenInColumns = (columns: number, children: React.ReactNode) => {
 
 export const MasonryVertical: FC<{
   /**
+   * Number of columns to render.
+   * Default undefind. `mediaSizeCols` will be used if not defined.
+   */
+  columns?: number;
+
+  /**
+   * Used when `columns` are not defined.
    * Number of columns at each Media size.
+   * Default values will be used, if not defined.
    */
   mediaSizeCols?: Map<MediaSizeName | string, number>;
 
@@ -45,6 +53,7 @@ export const MasonryVertical: FC<{
 
   children: ReactNode;
 }> = ({
+  columns,
   mediaSizeCols = new Map<MediaSizeName | string, number>(
     Object.values(MediaSizeName).map((name, index) => [name, index + 1]),
   ),
@@ -59,7 +68,7 @@ export const MasonryVertical: FC<{
     <div className={classNames} style={cssProps}>
       <MasonryVerticalColumns
         childrenInColumns={getChildrenInColumns(
-          mediaSizeCols.get(mediaSizeName) || DEFAULT_COLUMNS,
+          columns || mediaSizeCols.get(mediaSizeName) || DEFAULT_COLUMNS,
           children,
         )}
         classNames={columnClassNames}

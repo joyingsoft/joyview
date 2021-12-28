@@ -4,6 +4,8 @@ import './range-slider.scss';
 export const RangeSlider: FC<{
   name: string;
   label?: string;
+  showValueInLabel?: boolean;
+  labelValuePostfix?: string;
   min?: number;
   max?: number;
   value?: number;
@@ -12,6 +14,8 @@ export const RangeSlider: FC<{
 }> = ({
   name,
   label = '',
+  showValueInLabel,
+  labelValuePostfix = '',
   min = 0,
   max = 100,
   value = 0,
@@ -22,7 +26,12 @@ export const RangeSlider: FC<{
     <div className="range-slider p-md">
       <label>
         {label}
-        <small> {value}px</small>
+        {showValueInLabel && (
+          <small>
+            {' '}
+            {value} {labelValuePostfix}
+          </small>
+        )}
       </label>
       <input
         type="range"
