@@ -1,4 +1,5 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
+import { useIsElementVisible } from '../hooks/use-is-element-visible';
 import {
   getResizedDataURL,
   isDefinedResizeType,
@@ -10,8 +11,18 @@ export const FileImage: FC<{ file: File; classNames?: string }> = ({
   classNames,
 }) => {
   const [data, setData] = useState<string | undefined>(undefined);
+  const [refEl, setRefEl] = useState<Element | undefined>(undefined);
+  const { isVisible } = useIsElementVisible(refEl);
+
+  let ref = useCallback((el) => {
+    setRefEl(el);
+  }, []);
 
   useEffect(() => {
+    if (!isVisible) {
+      return;
+    }
+
     if (isDefinedResizeType(file.type)) {
       loadImageFromFile(file).then((img) => {
         if (img.height > 1000 || img.width > 1000) {
@@ -26,11 +37,18 @@ export const FileImage: FC<{ file: File; classNames?: string }> = ({
     return () => {
       setData('');
     };
-  }, [file]);
+  }, [file, isVisible]);
 
-  if (data && file) {
-    return <img className={classNames} src={data} alt={file.name} />;
-  }
-
-  return null;
+  return (
+    <img
+      className={classNames}
+      src={
+        data ||
+        // eslint-disable-next-line max-len
+        'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+      }
+      alt={file?.name}
+      ref={ref}
+    />
+  );
 };
