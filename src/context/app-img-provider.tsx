@@ -12,7 +12,14 @@ type AppImgContextProps = {
   /**
    * default add one img each call.
    */
-  addLoadedImg?: () => void;
+  imgDataEvent?: (key: string, imgDataURL: string) => void;
+
+  imgLoadedEvent?: (key: string, loaded: boolean) => void;
+};
+
+type AppLoadedImgProps = {
+  srcDataURL?: string;
+  loaded: boolean;
 };
 
 type AppImgContextStates = {
@@ -25,13 +32,13 @@ type AppImgContextStates = {
   /**
    * number of loaded (img.onLoad event) images.
    */
-  loaded: number;
+  loadedImgs: Map<string, AppLoadedImgProps>;
 };
 
 const appImgContextDefault: AppImgContextProps & AppImgContextStates = {
   imageFiles: [],
   isLoading: false,
-  loaded: 0,
+  loadedImgs: new Map(),
 };
 
 export const AppImgContext = createContext(appImgContextDefault);
@@ -41,7 +48,9 @@ export const AppImgContextProvider: FC<AppImgContextProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState<boolean>(
     appImgContextDefault.isLoading,
   );
-  const [loaded, setLoaded] = useState<number>(appImgContextDefault.loaded);
+  const [loadedImgs, setLoadedImgs] = useState<Map<string, AppLoadedImgProps>>(
+    appImgContextDefault.loadedImgs,
+  );
 
   const getFilesHandle = async () => {
     setIsLoading(true);
@@ -67,14 +76,32 @@ export const AppImgContextProvider: FC<AppImgContextProps> = ({ children }) => {
     setIsLoading(false);
   };
 
+  const loadedImgHandle = (key: string, data?: string, loaded?: boolean) => {
+    let img = loadedImgs.get(key);
+
+    if (img) {
+      if (loaded !== undefined) {
+        img.loaded = loaded;
+      }
+      if (data !== undefined) {
+        img.srcDataURL = data;
+      }
+    } else {
+      img = { srcDataURL: data, loaded: loaded === undefined ? false : loaded };
+    }
+
+    setLoadedImgs(loadedImgs.set(key, img));
+  };
+
   return (
     <AppImgContext.Provider
       value={{
         imageFiles,
         isLoading,
-        loaded,
+        loadedImgs,
         getFilesEvent: getFilesHandle,
-        addLoadedImg: () => setLoaded(loaded + 1),
+        imgDataEvent: (k, v) => loadedImgHandle(k, v),
+        imgLoadedEvent: (k, v) => loadedImgHandle(k, undefined, v),
       }}
     >
       {children}

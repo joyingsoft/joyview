@@ -24,27 +24,37 @@ export const FileImage: FC<{ file: File; classNames?: string }> = ({
   file,
   classNames,
 }) => {
+  const imgKey = `${file.webkitRelativePath}${
+    file.webkitRelativePath.includes(file.name) ? '' : file.name
+  }`;
   const [data, setData] = useState<string | undefined>(undefined);
   const [refEl, setRefEl] = useState<Element | undefined>(undefined);
   const { isVisible } = useIsElementVisible(refEl);
-  const { addLoadedImg } = useContext(AppImgContext);
+  const { loadedImgs, imgDataEvent, imgLoadedEvent } =
+    useContext(AppImgContext);
 
   let ref = useCallback((el) => {
     setRefEl(el);
   }, []);
 
   useEffect(() => {
-    if (!isVisible) {
-      return;
+    if (isVisible) {
+      const loadedImg = loadedImgs.get(imgKey);
+      if (loadedImg?.srcDataURL) {
+        setData(loadedImg.srcDataURL);
+      } else {
+        getImgDataURL(file)
+          .then((src) => {
+            if (imgDataEvent) {
+              imgDataEvent(imgKey, src);
+            }
+            setData(src);
+          })
+          .catch(() => {
+            // todo log error
+          });
+      }
     }
-
-    getImgDataURL(file)
-      .then((src) => {
-        setData(src);
-      })
-      .catch(() => {
-        // todo log error
-      });
 
     return () => {
       setData('');
@@ -52,8 +62,8 @@ export const FileImage: FC<{ file: File; classNames?: string }> = ({
   }, [file, isVisible]);
 
   const imgOnLoadHandle = () => {
-    if (isVisible && addLoadedImg) {
-      addLoadedImg();
+    if (isVisible && file && imgLoadedEvent) {
+      imgLoadedEvent(imgKey, true);
     }
   };
 
