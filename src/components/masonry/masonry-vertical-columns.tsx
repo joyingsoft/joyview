@@ -15,7 +15,7 @@ export const MasonryVerticalColumns: FC<{
         <div
           className={classNames}
           style={{ width: `${100 / childrenInColumns.length}%` }}
-          key={i}
+          key={`c-${i}`}
         >
           {items}
         </div>

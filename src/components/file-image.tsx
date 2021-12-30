@@ -1,6 +1,7 @@
 import { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { AppImgContext } from '../context/app-img-provider';
 import { useIsElementVisible } from '../hooks/use-is-element-visible';
+import { getFilePathName } from '../utils/file-utils';
 import {
   getResizedDataURL,
   isDefinedResizeType,
@@ -24,9 +25,7 @@ export const FileImage: FC<{ file: File; classNames?: string }> = ({
   file,
   classNames,
 }) => {
-  const imgKey = `${file.webkitRelativePath}${
-    file.webkitRelativePath.includes(file.name) ? '' : file.name
-  }`;
+  const imgKey = getFilePathName(file);
   const [data, setData] = useState<string | undefined>(undefined);
   const [refEl, setRefEl] = useState<Element | undefined>(undefined);
   const { isVisible } = useIsElementVisible(refEl);
@@ -58,6 +57,9 @@ export const FileImage: FC<{ file: File; classNames?: string }> = ({
 
     return () => {
       setData('');
+      if (imgLoadedEvent) {
+        imgLoadedEvent(imgKey, false);
+      }
     };
   }, [file, isVisible]);
 
