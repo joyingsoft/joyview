@@ -2,7 +2,7 @@ import { FC, useContext } from 'react';
 import { AppContext, AppThemeEnum } from '../context/app-context-provider';
 
 export const ThemeSelector: FC = () => {
-  const { theme, updateThemeEvent } = useContext(AppContext);
+  const { theme, themeEvent: updateThemeEvent } = useContext(AppContext);
 
   const changeEventHandle = (e: React.BaseSyntheticEvent) => {
     if (updateThemeEvent) {
