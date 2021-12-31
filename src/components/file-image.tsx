@@ -36,7 +36,7 @@ export const FileImage: FC<{ file: File; classNames?: string }> = ({
   const [data, setData] = useState<string | undefined>(undefined);
   const [refEl, setRefEl] = useState<Element | undefined>(undefined);
   const { isVisible } = useIsElementVisible(refEl);
-  const { loadedImgs, imgDataEvent, imgLoadedEvent } =
+  const { loadedImgs, imgDataEvent, imgLoadedEvent, isAllImgsLoaded } =
     useContext(AppImgContext);
 
   let ref = useCallback((el) => {
@@ -64,16 +64,21 @@ export const FileImage: FC<{ file: File; classNames?: string }> = ({
 
     return () => {
       setData('');
+    };
+  }, [file, isVisible]);
+
+  useEffect(() => {
+    return () => {
       if (imgLoadedEvent) {
         imgLoadedEvent(imgKey, false);
       }
     };
-  }, [file, isVisible]);
+  }, []);
 
   const imgOnLoadHandle = (
     e: BaseSyntheticEvent<any, any, HTMLImageElement>,
   ) => {
-    if (isVisible && data && imgLoadedEvent) {
+    if (data && imgLoadedEvent && !isAllImgsLoaded) {
       imgLoadedEvent(imgKey, true, e);
     }
   };
