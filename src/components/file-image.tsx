@@ -1,7 +1,7 @@
 import { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { AppImgContext } from '../context/app-img-provider';
 import { useIsElementVisible } from '../hooks/use-is-element-visible';
-import { getFilePathName } from '../utils/file-utils';
+import { getFilePathName, trimExtension } from '../utils/file-utils';
 import {
   getResizedDataURL,
   isDefinedResizeType,
@@ -77,7 +77,7 @@ export const FileImage: FC<{ file: File; classNames?: string }> = ({
         // eslint-disable-next-line max-len
         'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
       }
-      alt={file?.name}
+      alt={trimExtension(file?.name)}
       ref={ref}
       onLoad={imgOnLoadHandle}
     />
