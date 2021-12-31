@@ -1,4 +1,11 @@
-import { FC, useCallback, useContext, useEffect, useState } from 'react';
+import {
+  BaseSyntheticEvent,
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { AppImgContext } from '../context/app-img-provider';
 import { useIsElementVisible } from '../hooks/use-is-element-visible';
 import { getFilePathName, trimExtension } from '../utils/file-utils';
@@ -63,9 +70,11 @@ export const FileImage: FC<{ file: File; classNames?: string }> = ({
     };
   }, [file, isVisible]);
 
-  const imgOnLoadHandle = () => {
-    if (isVisible && file && imgLoadedEvent) {
-      imgLoadedEvent(imgKey, true);
+  const imgOnLoadHandle = (
+    e: BaseSyntheticEvent<any, any, HTMLImageElement>,
+  ) => {
+    if (isVisible && data && imgLoadedEvent) {
+      imgLoadedEvent(imgKey, true, e);
     }
   };
 

@@ -1,6 +1,7 @@
 import { directoryOpen, WellKnownDirectory } from 'browser-fs-access';
-import { createContext, FC, useState } from 'react';
+import { BaseSyntheticEvent, createContext, FC, useState } from 'react';
 import { isMediaTypeImage } from '../utils/file-utils';
+import { getImgAspectRatio } from '../utils/img-utils';
 
 type AppImgContextProps = {
   /**
@@ -14,11 +15,16 @@ type AppImgContextProps = {
    */
   imgDataEvent?: (key: string, imgDataURL: string) => void;
 
-  imgLoadedEvent?: (key: string, loaded: boolean) => void;
+  imgLoadedEvent?: (
+    key: string,
+    loaded: boolean,
+    event?: BaseSyntheticEvent<any, any, HTMLImageElement>,
+  ) => void;
 };
 
 type AppLoadedImgProps = {
   srcDataURL?: string;
+  aspectRatio?: number;
   loaded: boolean;
 };
 
@@ -76,18 +82,35 @@ export const AppImgContextProvider: FC<AppImgContextProps> = ({ children }) => {
     setIsLoading(false);
   };
 
-  const loadedImgHandle = (key: string, data?: string, loaded?: boolean) => {
+  const loadedImgHandle = (
+    key: string,
+    data?: string,
+    loaded?: boolean,
+    event?: BaseSyntheticEvent<any, any, HTMLImageElement>,
+  ) => {
     let img = loadedImgs.get(key);
 
     if (img) {
       if (loaded !== undefined) {
         img.loaded = loaded;
       }
+
       if (data !== undefined) {
         img.srcDataURL = data;
       }
+
+      // no need to reset ratio again, if defined already
+      if (!img.aspectRatio && event?.target) {
+        img.aspectRatio = getImgAspectRatio(event.target);
+      }
     } else {
-      img = { srcDataURL: data, loaded: loaded === undefined ? false : loaded };
+      img = {
+        srcDataURL: data,
+        loaded: loaded === undefined ? false : loaded,
+        aspectRatio: event?.target
+          ? getImgAspectRatio(event.target)
+          : undefined,
+      };
     }
 
     setLoadedImgs(loadedImgs.set(key, img));
@@ -101,7 +124,7 @@ export const AppImgContextProvider: FC<AppImgContextProps> = ({ children }) => {
         loadedImgs,
         getFilesEvent: getFilesHandle,
         imgDataEvent: (k, v) => loadedImgHandle(k, v),
-        imgLoadedEvent: (k, v) => loadedImgHandle(k, undefined, v),
+        imgLoadedEvent: (k, v, e) => loadedImgHandle(k, undefined, v, e),
       }}
     >
       {children}
