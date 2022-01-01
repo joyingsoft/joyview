@@ -63,7 +63,7 @@ const getLastImgHeight = (
     : 0;
 };
 
-const optimizeChildrenInColumns = (
+const equalizeChildrenInColumns = (
   loadedImgs: Map<string, AppLoadedImgProps>,
   columnsChildren: (
     | React.ReactChild
@@ -91,14 +91,14 @@ const optimizeChildrenInColumns = (
     const lastEl = columnsChildren[maxColHIndex].pop();
     if (lastEl) {
       columnsChildren[minColHIndex].push(lastEl);
-      columnsChildren = optimizeChildrenInColumns(loadedImgs, columnsChildren);
+      columnsChildren = equalizeChildrenInColumns(loadedImgs, columnsChildren);
     }
   }
 
   return columnsChildren;
 };
 
-export const getOptimizedChildrenInColumns = (
+export const getEqualizedChildrenInColumns = (
   loadedImgs: Map<string, AppLoadedImgProps>,
   columnsChildren: (
     | React.ReactChild
@@ -106,5 +106,5 @@ export const getOptimizedChildrenInColumns = (
     | React.ReactPortal
   )[][],
 ) => {
-  return optimizeChildrenInColumns(loadedImgs, columnsChildren);
+  return equalizeChildrenInColumns(loadedImgs, columnsChildren);
 };

@@ -35,6 +35,7 @@ type AppImgContextStates = {
    */
   loadedImgs: Map<string, AppLoadedImgProps>;
   isAllImgsLoaded: boolean;
+  hasAllRatios: boolean;
 };
 
 const appImgContextDefault: AppImgContextProps & AppImgContextStates = {
@@ -42,6 +43,7 @@ const appImgContextDefault: AppImgContextProps & AppImgContextStates = {
   isLoading: false,
   loadedImgs: new Map(),
   isAllImgsLoaded: false,
+  hasAllRatios: false,
 };
 
 export const AppImgContext = createContext(appImgContextDefault);
@@ -53,6 +55,9 @@ export const AppImgContextProvider: FC<AppImgContextProps> = ({ children }) => {
   );
   const [isAllImgsLoaded, setIsAllImgsLoaded] = useState<boolean>(
     appImgContextDefault.isAllImgsLoaded,
+  );
+  const [hasAllRatios, setHasAllRatios] = useState<boolean>(
+    appImgContextDefault.hasAllRatios,
   );
   const [loadedImgs, setLoadedImgs] = useState<Map<string, AppLoadedImgProps>>(
     appImgContextDefault.loadedImgs,
@@ -85,6 +90,16 @@ export const AppImgContextProvider: FC<AppImgContextProps> = ({ children }) => {
   const checkIsAllImgsLoaded = () => {
     for (const v of loadedImgs.values()) {
       if (!v.isLoaded) {
+        return false;
+      }
+    }
+
+    return loadedImgs.size === imageFiles.length ? true : false;
+  };
+
+  const checkHasAllRatios = () => {
+    for (const v of loadedImgs.values()) {
+      if (!v.aspectRatio) {
         return false;
       }
     }
@@ -129,6 +144,12 @@ export const AppImgContextProvider: FC<AppImgContextProps> = ({ children }) => {
     } else if (!img.isLoaded && isAllImgsLoaded) {
       setIsAllImgsLoaded(false);
     }
+
+    if (img.aspectRatio && checkHasAllRatios()) {
+      setHasAllRatios(true);
+    } else if (!img.aspectRatio && hasAllRatios) {
+      setHasAllRatios(false);
+    }
   };
 
   return (
@@ -138,6 +159,7 @@ export const AppImgContextProvider: FC<AppImgContextProps> = ({ children }) => {
         isLoading,
         loadedImgs,
         isAllImgsLoaded,
+        hasAllRatios,
         getFilesEvent: getFilesHandle,
         imgDataEvent: (k, v) => loadedImgHandle(k, v),
         imgLoadedEvent: (k, v, e) => loadedImgHandle(k, undefined, v, e),

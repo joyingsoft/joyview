@@ -4,7 +4,7 @@ import { MediaSizeName, useMediaSize } from '../../hooks/use-media-size';
 import {
   DEFAULT_COLUMNS,
   getChildrenInColumns,
-  getOptimizedChildrenInColumns,
+  getEqualizedChildrenInColumns,
 } from '../../utils/masonry-utils';
 import { MasonryVerticalColumns } from './masonry-vertical-columns';
 import './masonry-vertical.scss';
@@ -49,7 +49,7 @@ export const MasonryVertical: FC<MasonryVerticalProps> = ({
   children,
 }) => {
   const mediaSizeName = useMediaSize();
-  const { loadedImgs, isAllImgsLoaded } = useContext(AppImgContext);
+  const { loadedImgs, hasAllRatios } = useContext(AppImgContext);
 
   const [newColumns, setNewColumns] = useState<
     (React.ReactChild | React.ReactFragment | React.ReactPortal)[][] | undefined
@@ -61,14 +61,14 @@ export const MasonryVertical: FC<MasonryVerticalProps> = ({
   );
 
   useEffect(() => {
-    if (isAllImgsLoaded) {
-      const optimized = getOptimizedChildrenInColumns(loadedImgs, cic);
+    if (hasAllRatios) {
+      const optimized = getEqualizedChildrenInColumns(loadedImgs, cic);
       setNewColumns(optimized);
     }
     return () => {
       setNewColumns(undefined);
     };
-  }, [isAllImgsLoaded, mediaSizeName, columns]);
+  }, [hasAllRatios, mediaSizeName, columns]);
 
   return (
     <div className={classNames} style={cssProps}>
