@@ -52,35 +52,28 @@ export const MasonryVertical: FC<MasonryVerticalProps> = ({
   const { loadedImgs, isAllImgsLoaded } = useContext(AppImgContext);
 
   const [newColumns, setNewColumns] = useState<
-    (React.ReactChild | React.ReactFragment | React.ReactPortal)[][]
-  >(
-    getChildrenInColumns(
-      columns || mediaSizeCols.get(mediaSizeName) || DEFAULT_COLUMNS,
-      children,
-    ),
+    (React.ReactChild | React.ReactFragment | React.ReactPortal)[][] | undefined
+  >(undefined);
+
+  const cic = getChildrenInColumns(
+    columns || mediaSizeCols.get(mediaSizeName) || DEFAULT_COLUMNS,
+    children,
   );
 
   useEffect(() => {
-    setNewColumns(
-      getChildrenInColumns(
-        columns || mediaSizeCols.get(mediaSizeName) || DEFAULT_COLUMNS,
-        children,
-      ),
-    );
-  }, [columns, mediaSizeName]);
-
-  useEffect(() => {
     if (isAllImgsLoaded) {
-      const optimized = getOptimizedChildrenInColumns(loadedImgs, newColumns);
-      // todo: fix optimized not updated.
+      const optimized = getOptimizedChildrenInColumns(loadedImgs, cic);
       setNewColumns(optimized);
     }
-  }, [isAllImgsLoaded]);
+    return () => {
+      setNewColumns(undefined);
+    };
+  }, [isAllImgsLoaded, mediaSizeName, columns]);
 
   return (
     <div className={classNames} style={cssProps}>
       <MasonryVerticalColumns
-        childrenInColumns={newColumns}
+        childrenInColumns={newColumns || cic}
         classNames={columnClassNames}
       />
     </div>
