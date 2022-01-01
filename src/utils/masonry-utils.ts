@@ -3,6 +3,11 @@ import { AppLoadedImgProps } from '../types/app-loaded-img-props';
 
 export const DEFAULT_COLUMNS = 1;
 
+/**
+ * Simply divide children to number of given columns.
+ * @param columns number of columns to divide children.
+ * @param children will paser this React.Children to array.
+ */
 export const getChildrenInColumns = (
   columns: number,
   children: React.ReactNode,
@@ -63,6 +68,14 @@ const getLastImgHeight = (
     : 0;
 };
 
+/**
+ * Equalize already divided children in columns.
+ * - recusivly move last element in a heighest column
+ * - to a shortest height column.
+ *
+ * @param loadedImgs: Map<key:string, AppLoadedImgProps>
+ * @param columnsChildren existed columnsChildren
+ */
 const equalizeChildrenInColumns = (
   loadedImgs: Map<string, AppLoadedImgProps>,
   columnsChildren: (
@@ -99,12 +112,14 @@ const equalizeChildrenInColumns = (
 };
 
 export const getEqualizedChildrenInColumns = (
+  columns: number,
+  hasAllRatios: boolean,
   loadedImgs: Map<string, AppLoadedImgProps>,
-  columnsChildren: (
-    | React.ReactChild
-    | React.ReactFragment
-    | React.ReactPortal
-  )[][],
-) => {
-  return equalizeChildrenInColumns(loadedImgs, columnsChildren);
-};
+  children: React.ReactNode,
+) =>
+  hasAllRatios
+    ? equalizeChildrenInColumns(
+        loadedImgs,
+        getChildrenInColumns(columns, children),
+      )
+    : getChildrenInColumns(columns, children);

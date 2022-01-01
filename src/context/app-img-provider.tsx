@@ -139,13 +139,13 @@ export const AppImgContextProvider: FC<AppImgContextProps> = ({ children }) => {
 
     setLoadedImgs(loadedImgs.set(key, img));
 
-    if (img.isLoaded && checkIsAllImgsLoaded()) {
+    if (img.isLoaded && checkIsAllImgsLoaded() && !isAllImgsLoaded) {
       setIsAllImgsLoaded(true);
     } else if (!img.isLoaded && isAllImgsLoaded) {
       setIsAllImgsLoaded(false);
     }
 
-    if (img.aspectRatio && checkHasAllRatios()) {
+    if (img.aspectRatio && checkHasAllRatios() && !hasAllRatios) {
       setHasAllRatios(true);
     } else if (!img.aspectRatio && hasAllRatios) {
       setHasAllRatios(false);
