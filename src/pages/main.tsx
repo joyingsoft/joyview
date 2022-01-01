@@ -8,6 +8,7 @@ import { AppContext, AppViewEnum } from '../context/app-context-provider';
 import { AppImgColumnsContext } from '../context/app-img-cols-provider';
 import { AppImgContext } from '../context/app-img-provider';
 import { AppSpaceContext } from '../context/app-space-provider';
+import { getFilePathName } from '../utils/file-utils';
 import { WelcomePage } from './sub/welcome-page';
 
 const MainViewDispatcher: FC = () => {
@@ -37,7 +38,7 @@ const MainViewDispatcher: FC = () => {
           {imageFiles.map((img) => (
             <div
               style={{ padding: `${imagePaddingPx}px` }}
-              key={img.webkitRelativePath + img.name}
+              key={getFilePathName(img)}
             >
               <FileImage file={img} />
             </div>

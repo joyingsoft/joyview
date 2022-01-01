@@ -89,3 +89,10 @@ export const getResizedDataURL = (
 ) => {
   return canvasToDataURL(createCanvasFromImg(img, maxWidth, maxHeight));
 };
+
+/**
+ * width / height
+ */
+export const getImgAspectRatio = (img: HTMLImageElement) => {
+  return img.naturalWidth / img.naturalHeight;
+};

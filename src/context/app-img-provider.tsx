@@ -1,6 +1,8 @@
 import { directoryOpen, WellKnownDirectory } from 'browser-fs-access';
-import { createContext, FC, useState } from 'react';
+import { BaseSyntheticEvent, createContext, FC, useState } from 'react';
+import { AppLoadedImgProps } from '../types/app-loaded-img-props';
 import { isMediaTypeImage } from '../utils/file-utils';
+import { getImgAspectRatio } from '../utils/img-utils';
 
 type AppImgContextProps = {
   /**
@@ -14,12 +16,11 @@ type AppImgContextProps = {
    */
   imgDataEvent?: (key: string, imgDataURL: string) => void;
 
-  imgLoadedEvent?: (key: string, loaded: boolean) => void;
-};
-
-type AppLoadedImgProps = {
-  srcDataURL?: string;
-  loaded: boolean;
+  imgLoadedEvent?: (
+    key: string,
+    isLoaded: boolean,
+    event?: BaseSyntheticEvent<any, any, HTMLImageElement>,
+  ) => void;
 };
 
 type AppImgContextStates = {
@@ -33,12 +34,16 @@ type AppImgContextStates = {
    * number of loaded (img.onLoad event) images.
    */
   loadedImgs: Map<string, AppLoadedImgProps>;
+  isAllImgsLoaded: boolean;
+  hasAllRatios: boolean;
 };
 
 const appImgContextDefault: AppImgContextProps & AppImgContextStates = {
   imageFiles: [],
   isLoading: false,
   loadedImgs: new Map(),
+  isAllImgsLoaded: false,
+  hasAllRatios: false,
 };
 
 export const AppImgContext = createContext(appImgContextDefault);
@@ -47,6 +52,12 @@ export const AppImgContextProvider: FC<AppImgContextProps> = ({ children }) => {
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(
     appImgContextDefault.isLoading,
+  );
+  const [isAllImgsLoaded, setIsAllImgsLoaded] = useState<boolean>(
+    appImgContextDefault.isAllImgsLoaded,
+  );
+  const [hasAllRatios, setHasAllRatios] = useState<boolean>(
+    appImgContextDefault.hasAllRatios,
   );
   const [loadedImgs, setLoadedImgs] = useState<Map<string, AppLoadedImgProps>>(
     appImgContextDefault.loadedImgs,
@@ -76,21 +87,69 @@ export const AppImgContextProvider: FC<AppImgContextProps> = ({ children }) => {
     setIsLoading(false);
   };
 
-  const loadedImgHandle = (key: string, data?: string, loaded?: boolean) => {
-    let img = loadedImgs.get(key);
-
-    if (img) {
-      if (loaded !== undefined) {
-        img.loaded = loaded;
+  const checkIsAllImgsLoaded = () => {
+    for (const v of loadedImgs.values()) {
+      if (!v.isLoaded) {
+        return false;
       }
+    }
+
+    return loadedImgs.size === imageFiles.length ? true : false;
+  };
+
+  const checkHasAllRatios = () => {
+    for (const v of loadedImgs.values()) {
+      if (!v.aspectRatio) {
+        return false;
+      }
+    }
+
+    return loadedImgs.size === imageFiles.length ? true : false;
+  };
+
+  const loadedImgHandle = (
+    key: string,
+    data?: string,
+    isLoaded?: boolean,
+    event?: BaseSyntheticEvent<any, any, HTMLImageElement>,
+  ) => {
+    let img = loadedImgs.get(key);
+    if (img) {
+      if (isLoaded !== undefined) {
+        img.isLoaded = isLoaded;
+      }
+
       if (data !== undefined) {
         img.srcDataURL = data;
       }
+
+      // no need to reset ratio again, if defined already
+      if (!img.aspectRatio && event?.target) {
+        img.aspectRatio = getImgAspectRatio(event.target);
+      }
     } else {
-      img = { srcDataURL: data, loaded: loaded === undefined ? false : loaded };
+      img = {
+        srcDataURL: data,
+        isLoaded: isLoaded === undefined ? false : isLoaded,
+        aspectRatio: event?.target
+          ? getImgAspectRatio(event.target)
+          : undefined,
+      };
     }
 
     setLoadedImgs(loadedImgs.set(key, img));
+
+    if (img.isLoaded && checkIsAllImgsLoaded() && !isAllImgsLoaded) {
+      setIsAllImgsLoaded(true);
+    } else if (!img.isLoaded && isAllImgsLoaded) {
+      setIsAllImgsLoaded(false);
+    }
+
+    if (img.aspectRatio && checkHasAllRatios() && !hasAllRatios) {
+      setHasAllRatios(true);
+    } else if (!img.aspectRatio && hasAllRatios) {
+      setHasAllRatios(false);
+    }
   };
 
   return (
@@ -99,9 +158,11 @@ export const AppImgContextProvider: FC<AppImgContextProps> = ({ children }) => {
         imageFiles,
         isLoading,
         loadedImgs,
+        isAllImgsLoaded,
+        hasAllRatios,
         getFilesEvent: getFilesHandle,
         imgDataEvent: (k, v) => loadedImgHandle(k, v),
-        imgLoadedEvent: (k, v) => loadedImgHandle(k, undefined, v),
+        imgLoadedEvent: (k, v, e) => loadedImgHandle(k, undefined, v, e),
       }}
     >
       {children}

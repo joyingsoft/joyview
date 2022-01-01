@@ -1,6 +1,14 @@
-import { FC, useCallback, useContext, useEffect, useState } from 'react';
+import {
+  BaseSyntheticEvent,
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { AppImgContext } from '../context/app-img-provider';
 import { useIsElementVisible } from '../hooks/use-is-element-visible';
+import { getFilePathName, trimExtension } from '../utils/file-utils';
 import {
   getResizedDataURL,
   isDefinedResizeType,
@@ -24,13 +32,11 @@ export const FileImage: FC<{ file: File; classNames?: string }> = ({
   file,
   classNames,
 }) => {
-  const imgKey = `${file.webkitRelativePath}${
-    file.webkitRelativePath.includes(file.name) ? '' : file.name
-  }`;
+  const imgKey = getFilePathName(file);
   const [data, setData] = useState<string | undefined>(undefined);
   const [refEl, setRefEl] = useState<Element | undefined>(undefined);
   const { isVisible } = useIsElementVisible(refEl);
-  const { loadedImgs, imgDataEvent, imgLoadedEvent } =
+  const { loadedImgs, imgDataEvent, imgLoadedEvent, isAllImgsLoaded } =
     useContext(AppImgContext);
 
   let ref = useCallback((el) => {
@@ -61,9 +67,19 @@ export const FileImage: FC<{ file: File; classNames?: string }> = ({
     };
   }, [file, isVisible]);
 
-  const imgOnLoadHandle = () => {
-    if (isVisible && file && imgLoadedEvent) {
-      imgLoadedEvent(imgKey, true);
+  useEffect(() => {
+    return () => {
+      if (imgLoadedEvent) {
+        imgLoadedEvent(imgKey, false);
+      }
+    };
+  }, []);
+
+  const imgOnLoadHandle = (
+    e: BaseSyntheticEvent<any, any, HTMLImageElement>,
+  ) => {
+    if (data && imgLoadedEvent && !isAllImgsLoaded) {
+      imgLoadedEvent(imgKey, true, e);
     }
   };
 
@@ -75,7 +91,7 @@ export const FileImage: FC<{ file: File; classNames?: string }> = ({
         // eslint-disable-next-line max-len
         'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
       }
-      alt={file?.name}
+      alt={trimExtension(file?.name)}
       ref={ref}
       onLoad={imgOnLoadHandle}
     />

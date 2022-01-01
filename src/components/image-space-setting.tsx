@@ -14,6 +14,7 @@ export const ImageSpaceSetting: FC = () => {
       labelValuePostfix="px"
       value={imagePaddingPx}
       changeEvent={changeImagePaddingEvent}
+      min={0}
       max={64}
     />
   );

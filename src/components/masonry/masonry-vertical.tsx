@@ -1,31 +1,14 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC, ReactNode, useContext } from 'react';
+import { AppImgContext } from '../../context/app-img-provider';
 import { MediaSizeName, useMediaSize } from '../../hooks/use-media-size';
+import {
+  DEFAULT_COLUMNS,
+  getEqualizedChildrenInColumns,
+} from '../../utils/masonry-utils';
 import { MasonryVerticalColumns } from './masonry-vertical-columns';
 import './masonry-vertical.scss';
 
-const DEFAULT_COLUMNS = 1;
-
-const getChildrenInColumns = (columns: number, children: React.ReactNode) => {
-  const columnsChildren = new Array<
-    (React.ReactChild | React.ReactFragment | React.ReactPortal)[]
-  >(columns);
-
-  const childrenArray = React.Children.toArray(children);
-
-  for (let i = 0; i < childrenArray.length; i++) {
-    const colIndex = i % columns;
-
-    if (!columnsChildren[colIndex]) {
-      columnsChildren[colIndex] = [];
-    }
-
-    columnsChildren[colIndex].push(childrenArray[i]);
-  }
-
-  return columnsChildren;
-};
-
-export const MasonryVertical: FC<{
+type MasonryVerticalProps = {
   /**
    * Number of columns to render.
    * Default undefind. `mediaSizeCols` will be used if not defined.
@@ -52,7 +35,9 @@ export const MasonryVertical: FC<{
   cssProps?: React.CSSProperties;
 
   children: ReactNode;
-}> = ({
+};
+
+export const MasonryVertical: FC<MasonryVerticalProps> = ({
   columns,
   mediaSizeCols = new Map<MediaSizeName | string, number>(
     Object.values(MediaSizeName).map((name, index) => [name, index + 1]),
@@ -63,12 +48,15 @@ export const MasonryVertical: FC<{
   children,
 }) => {
   const mediaSizeName = useMediaSize();
+  const { loadedImgs, hasAllRatios } = useContext(AppImgContext);
 
   return (
     <div className={classNames} style={cssProps}>
       <MasonryVerticalColumns
-        childrenInColumns={getChildrenInColumns(
+        childrenInColumns={getEqualizedChildrenInColumns(
           columns || mediaSizeCols.get(mediaSizeName) || DEFAULT_COLUMNS,
+          hasAllRatios,
+          loadedImgs,
           children,
         )}
         classNames={columnClassNames}

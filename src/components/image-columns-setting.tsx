@@ -12,6 +12,7 @@ export const ImageColumnsSetting: FC = () => {
       showValueInLabel
       value={columns}
       changeEvent={columnsEvent}
+      min={1}
       max={16}
     />
   );
