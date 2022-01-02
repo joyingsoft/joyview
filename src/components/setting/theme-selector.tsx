@@ -1,5 +1,5 @@
 import { FC, useContext } from 'react';
-import { AppContext, AppThemeEnum } from '../context/app-context-provider';
+import { AppContext, AppThemeEnum } from '../../context/app-context-provider';
 
 export const ThemeSelector: FC = () => {
   const { theme, themeEvent: updateThemeEvent } = useContext(AppContext);
