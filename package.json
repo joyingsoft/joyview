@@ -1,7 +1,7 @@
 {
-  "name": "joying-image-viewer",
+  "name": "joyview",
   "version": "1.0.0",
-  "description": "Joying Image Viewer, image viewer, photo viewer.",
+  "description": "View local images, photos, gifs in browser.",
   "main": "index.tsx",
   "scripts": {
     "watch": "webpack --watch",
@@ -11,20 +11,30 @@
     "prettier:fix": "prettier --config .prettierrc --write \"src/**/*.{js,jsx,ts,tsx,scss,css,md}\"",
     "lint": "eslint --ext .js,.ts,.tsx src/",
     "lint:fix": "eslint --ext .js,.ts,.tsx --fix src/",
+    "verify": "npm run lint & npm run prettier",
+    "fix": "npm run lint:fix & npm run prettier:fix",
     "test": "echo \"Error: no test specified\" && exit 1",
     "debug": "node-nightly --inspect ./node_modules/webpack/bin/webpack.js --mode=development"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/joyingsoft/joying-image-viewer.git"
+    "url": "git+https://github.com/joyingsoft/joyview.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "image",
+    "photo",
+    "picture",
+    "gif",
+    "view",
+    "viewer",
+    "browser"
+  ],
+  "author": "Junjun Guo",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/joyingsoft/joying-image-viewer/issues"
+    "url": "https://github.com/joyingsoft/joyview/issues"
   },
-  "homepage": "https://github.com/joyingsoft/joying-image-viewer#readme",
+  "homepage": "https://github.com/joyingsoft/joyview#readme",
   "devDependencies": {
     "@types/eslint": "^8.2.1",
     "@types/node": "^17.0.0",
