@@ -6,7 +6,7 @@ import { AppImgContextProvider } from './context/app-img-provider';
 import { AppSpaceContextProvider } from './context/app-space-provider';
 import { AppRouter } from './router/app-router';
 
-const getAppBasename = (appPath = 'joying-image-viewer') =>
+const getAppBasename = (appPath = 'joyview') =>
   window.location.pathname.includes(appPath) ? `/${appPath}` : '/';
 
 export const App: FC = () => {

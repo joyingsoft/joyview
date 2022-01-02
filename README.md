@@ -1,2 +1,3 @@
-# joying-image-viewer
-Joying Image Viewer, image viewer, photo viewer.
+# JoyView
+
+View local images, photos, gifs in browser.
