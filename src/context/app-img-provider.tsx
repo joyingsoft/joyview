@@ -21,6 +21,11 @@ type AppImgContextProps = {
     isLoaded: boolean,
     event?: BaseSyntheticEvent<any, any, HTMLImageElement>,
   ) => void;
+
+  /**
+   * !!! remove all catched data in app-img-provider.
+   */
+  purgeEvent?: () => void;
 };
 
 type AppImgContextStates = {
@@ -152,6 +157,14 @@ export const AppImgContextProvider: FC<AppImgContextProps> = ({ children }) => {
     }
   };
 
+  const purge = () => {
+    setImageFiles(appImgContextDefault.imageFiles);
+    setHasAllRatios(appImgContextDefault.hasAllRatios);
+    setIsAllImgsLoaded(appImgContextDefault.isAllImgsLoaded);
+    setIsLoading(appImgContextDefault.isLoading);
+    setLoadedImgs(appImgContextDefault.loadedImgs);
+  };
+
   return (
     <AppImgContext.Provider
       value={{
@@ -160,6 +173,7 @@ export const AppImgContextProvider: FC<AppImgContextProps> = ({ children }) => {
         loadedImgs,
         isAllImgsLoaded,
         hasAllRatios,
+        purgeEvent: purge,
         getFilesEvent: getFilesHandle,
         imgDataEvent: (k, v) => loadedImgHandle(k, v),
         imgLoadedEvent: (k, v, e) => loadedImgHandle(k, undefined, v, e),

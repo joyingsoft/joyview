@@ -30,7 +30,7 @@ h5 {
   color: var(--theme-text-primary);
 }
 
-button {
+.btn {
   font-size: 1.1rem;
   color: $color-brilliant-white;
   background-color: var(--theme-primary-dark);
@@ -46,5 +46,10 @@ button {
   &:active {
     border-color: var(--theme-primary-light);
     filter: contrast(120%);
+  }
+
+  &-warn {
+    background-color: var(--theme-warn);
+    border-color: var(--theme-warn);
   }
 }

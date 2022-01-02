@@ -9,7 +9,7 @@ export const WelcomePage: FC = () => {
   return (
     <div className="welcome-page m-lg p-lg">
       <h1>Joying Image Viewer</h1>
-      <button onClick={getFilesEvent} className="m-lg">
+      <button onClick={getFilesEvent} className="btn m-lg">
         <FontAwesomeIcon
           icon={isLoading ? faSpinner : faFolderOpen}
           pulse={isLoading}

@@ -10,6 +10,7 @@
   --theme-primary-dark: #{$color-classic-blue};
   --theme-primary-light: #{$color-cerulean};
   --theme-accent: #{$color-living-coral};
+  --theme-warn: #{$color-rust};
 }
 
 [app-theme='light'] {
@@ -22,4 +23,5 @@
   --theme-primary-dark: #{$color-mint};
   --theme-primary-light: #{$color-green-ash};
   --theme-accent: #{$color-ultra-violet};
+  --theme-warn: #{$color-raspberry-sorbet};
 }
