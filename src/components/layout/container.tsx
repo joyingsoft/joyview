@@ -1,6 +1,5 @@
 import { FC, useContext, useEffect, useState } from 'react';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Icon } from '@iconify/react';
 import { AppContext } from '../../context/app-context-provider';
 
 export const Container: FC = ({ children }) => {
@@ -25,7 +24,7 @@ export const Container: FC = ({ children }) => {
           role="button"
           onClick={() => sidebarOpenEvent && sidebarOpenEvent(true)}
         >
-          <FontAwesomeIcon icon={faBars} />
+          <Icon icon="ic:baseline-menu" className="icon icon-lg" />
         </div>
       )}
       {children}

@@ -1,0 +1,25 @@
+$icon-sizes: (
+  sm: 1.125,
+  md: 1.5,
+  lg: 2.25,
+  xl: 3,
+) !default;
+
+.icon {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  @each $sname, $size in $icon-sizes {
+    &-#{$sname} {
+      font-size: #{$size}rem;
+    }
+  }
+}

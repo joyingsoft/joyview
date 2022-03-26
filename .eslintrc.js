@@ -4,7 +4,11 @@ module.exports = {
     browser: true,
     node: true,
   },
-  extends: ['airbnb-typescript', 'plugin:prettier/recommended', "plugin:import/recommended"],
+  extends: [
+    'airbnb-typescript',
+    'plugin:prettier/recommended',
+    'plugin:import/recommended',
+  ],
   parserOptions: {
     project: './tsconfig.json',
     sourceType: 'module',
@@ -34,5 +38,11 @@ module.exports = {
     'no-confusing-arrow': 'off',
     'import/prefer-default-export': 'off',
     'react/jsx-props-no-spreading': 'off',
+    'import/no-extraneous-dependencies': [
+      'error',
+      {
+        devDependencies: true,
+      },
+    ],
   },
 };
