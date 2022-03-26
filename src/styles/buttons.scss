@@ -6,10 +6,15 @@
   height: 40px;
   padding: 10px 24px;
   border-radius: 100px;
+  border-color: transparent;
   text-align: center;
   cursor: pointer;
 
+  // Text Style: M3/label/large
+
   &-filled {
+    // M3/sys/light/on-primary
+    color: var(--md-sys-color-on-primary);
     /* M3/sys/light/primary */
     background: var(--md-sys-color-primary);
 
@@ -18,6 +23,22 @@
     &:active {
       /* M3/Elevation Light/1 */
       @extend .elevation-1;
+      filter: contrast(120%);
+    }
+
+    & > .md-circular-progress {
+        stroke: var(--md-sys-color-on-primary);
+    }
+  }
+
+  &-outlined,
+  &-text {
+    background-color: transparent;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: var(--md-sys-color-secondary-container);
     }
   }
 
@@ -27,22 +48,16 @@
     border: 1px solid var(--md-sys-color-outline); //#79747e;
     box-sizing: border-box;
 
-    &:hover,
-    &:focus,
-    &:active {
-      /* M3/read-only/light/primary/opacity-0.08 */
-      background: rgba(var(--md-sys-color-primary), 0.08);
+    & > .md-circular-progress {
+        stroke: var(--md-sys-color-primary);
     }
   }
 
   &-text {
     color: var(--md-sys-color-primary);
 
-    &:hover,
-    &:focus,
-    &:active {
-      /* M3/read-only/light/primary/opacity-0.08 */
-      background: rgba(var(--md-sys-color-primary), 0.08);
+    & > .md-circular-progress {
+        stroke: var(--md-sys-color-primary);
     }
   }
 
@@ -54,5 +69,11 @@
   &-icon {
     flex-direction: row;
     padding: 10px 16px 10px 12px;
+
+    & > svg {
+      height: 18px;
+      width: 18px;
+      margin-right: 8px;
+    }
   }
 }

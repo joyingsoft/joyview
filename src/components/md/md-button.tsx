@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { MdCircularProgress } from './circular-progress/md-circular-progress';
 
 export interface MdButtonProps {
   type?: 'filled' | 'outlined' | 'text';
@@ -25,11 +26,11 @@ export const MdButton: FC<
   return (
     <button
       {...props}
-      className={`btn btn-${type} ${!!icon || hasIcon ? 'btn-icon' : ''} ${
-        disabled ? 'btn-disabled' : ''
-      }`}
+      className={`button btn btn-${type} ${
+        !!icon || hasIcon ? 'btn-icon' : ''
+      } ${disabled ? 'btn-disabled' : ''}`}
     >
-      {isLoading && <>loading</>}
+      {isLoading && <MdCircularProgress />}
       {!isLoading && (
         <>
           {icon && { icon }}

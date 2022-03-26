@@ -1,37 +1,31 @@
+import { Icon } from '@iconify/react';
 import { FC, useContext } from 'react';
 import { AppContext, AppThemeEnum } from '../../context/app-context-provider';
+import { MdButton } from '../md/md-button';
 
 export const ThemeSelector: FC = () => {
   const { theme, themeEvent: updateThemeEvent } = useContext(AppContext);
 
-  const changeEventHandle = (e: React.BaseSyntheticEvent) => {
+  const handleBtnClick = () => {
     if (updateThemeEvent) {
-      updateThemeEvent(e.target.value);
+      updateThemeEvent(
+        theme === AppThemeEnum.dark ? AppThemeEnum.light : AppThemeEnum.dark,
+      );
     }
   };
 
   return (
     <div className="theme-selector p-md">
-      <label>
-        <input
-          type="radio"
-          name="dark"
-          value={AppThemeEnum.dark}
-          checked={theme === AppThemeEnum.dark}
-          onChange={changeEventHandle}
+      <MdButton hasIcon type="text" onClick={handleBtnClick}>
+        <Icon
+          icon={`ic:${
+            theme === AppThemeEnum.light
+              ? 'baseline-nightlight'
+              : 'outline-light-mode'
+          }`}
         />
-        Dark
-      </label>
-      <label>
-        <input
-          type="radio"
-          name="light"
-          value={AppThemeEnum.light}
-          checked={theme === AppThemeEnum.light}
-          onChange={changeEventHandle}
-        />
-        Light
-      </label>
+        {theme === AppThemeEnum.light ? 'Dark' : 'Light'}
+      </MdButton>
     </div>
   );
 };

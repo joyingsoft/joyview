@@ -1,0 +1,39 @@
+$animation-time: 1.6s;
+
+.md-circular-progress {
+  animation: rotation $animation-time linear infinite;
+  stroke: var(--md-sys-color-on-primary);
+
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(270deg);
+    }
+  }
+
+  &__circle {
+    stroke-dasharray: 180;
+    stroke-dashoffset: 0;
+    transform-origin: center;
+    animation: turn $animation-time ease-in-out infinite;
+
+    @keyframes turn {
+      0% {
+        stroke-dashoffset: 180;
+      }
+
+      50% {
+        stroke-dashoffset: 45;
+        transform: rotate(135deg);
+      }
+
+      100% {
+        stroke-dashoffset: 180;
+        transform: rotate(450deg);
+      }
+    }
+  }
+}

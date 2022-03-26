@@ -13,14 +13,15 @@
     top: 0;
     left: 0;
     margin: 1rem;
-    color: var(--theme-text-disabled);
+    color: var(--md-sys-color-primary-light);
+    opacity: 0.5;
     transition: $transition-base;
     cursor: pointer;
 
     &:hover,
     &:focus,
     &:active {
-      color: var(--theme-text-primary);
+      opacity: 1;
     }
   }
 
@@ -29,7 +30,7 @@
     flex-direction: column;
     box-shadow: $box-shadow;
     box-sizing: border-box;
-    background-color: var(--theme-bg-secondary);
+    background-color: var(--md-sys-color-surface);
     overflow-x: hidden;
     transition: $transition-collapse-width;
 
