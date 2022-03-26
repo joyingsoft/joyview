@@ -1,5 +1,4 @@
-import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Icon } from '@iconify/react';
 import { FC, useContext } from 'react';
 import { AppContext, AppViewEnum } from '../../context/app-context-provider';
 import { CloseImgView } from '../setting/close-img-view';
@@ -16,7 +15,7 @@ export const Sidebar: FC = ({ children }) => {
         className="btn m-md"
         onClick={() => sidebarOpenEvent && sidebarOpenEvent(false)}
       >
-        <FontAwesomeIcon icon={faAngleLeft} />
+        <Icon icon="ic:baseline-chevron-left" />
       </button>
 
       <div className="sidebar__c">
