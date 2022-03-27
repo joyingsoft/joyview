@@ -1,60 +1,89 @@
+$thumb-height: 20px !default;
+$thumb-width: 20px !default;
+$thumb-radius: 50% !default;
+
+$track-width: 100% !default;
+$track-height: 6px !default;
+$track-radius: 6px !default;
+
+// ref: https://github.com/darlanrod/input-range-scss/blob/master/_inputrange.scss
 .range-slider {
   input[type='range'] {
-    cursor: pointer;
-    -webkit-appearance: none; // hide the slider track bar
-    width: 100%; //Specific width is required for Firefox.
-    background: transparent;
+    width: 100%; /* Specific width is required for Firefox. */
+    outline: none;
+    -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+    -webkit-tap-highlight-color: transparent; /* for removing the highlight */
+    border-radius: $track-radius;
+    height: $track-height;
 
-    &::-webkit-slider-thumb {
-      -webkit-appearance: none; // hide thumb (drag buttons)
-    }
-
-    &:focus {
-      outline: none; //Removes the blue border
-    }
-
-    // #thumb { // todo: see Shadow DOM
-    //   &:focus {
-    //     border-color: purple;
-    //   }
-    // }
-
-    &::-ms-track {
-      width: 100%;
-      cursor: pointer;
-      background: transparent;
-      border-color: transparent;
-      color: transparent;
-    }
-
-    /* thumb for WebKit/Blink */
-    &::-webkit-slider-thumb {
-      -webkit-appearance: none;
+    @mixin input_thumb {
       border: 0.1rem solid rgba(128, 128, 128, 0.247);
-      height: 20px;
-      width: 20px;
-      border-radius: 50%;
-      background: var(--md-sys-color-primary);
+      height: $thumb-height;
+      width: $thumb-width;
+      border-radius: $thumb-radius;
+      background-color: var(--md-sys-color-primary);
       cursor: pointer;
-      margin-top: -7px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+      margin-top: -($thumb-height - $track-height)/2; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
       box-shadow: 0.1rem 0.1rem 0.1rem #00000054, 0 0 0.1rem #0d0d0d4f; /* Add cool effects to your sliders! */
 
+      transition-duration: 100ms;
+      transition-delay: 50ms;
+
       &:hover,
-      &:focus,
-      &:active {
+      &:active, 
+      &:focus // TODO: keyborad focus not working (reason: check out Shadow DOM)
+      // the definetion works, but focus have to focus on the Shadow element ...
+      {
         background-color: var(--md-sys-color-on-primary-container);
       }
     }
 
-    // todo: and other browsers .....
+    /* Special styling for WebKit/Blink */
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+      -webkit-tap-highlight-color: transparent; /* for removing the highlight */
 
-    // track:
-    &::-webkit-slider-runnable-track {
-      width: 100%;
-      height: 6px;
+      @include input_thumb;
+    }
+
+    /* Special styling for Firefox */
+    &::-moz-range-thumb {
+      @include input_thumb;
+    }
+
+    /* Special styling for IE */
+    &::-ms-thumb {
+      @include input_thumb;
+    }
+
+    @mixin slider_track {
+      width: $track-width;
+      height: $track-height;
       cursor: pointer;
-      background: var(--md-sys-color-primary);
-      border-radius: 6px;
+    }
+
+    &::-webkit-slider-runnable-track {
+      @include slider_track;
+      border-radius: $track-radius;
+    }
+
+    &::-moz-range-track {
+      @include slider_track;
+      border-radius: $track-radius;
+      height: $track-height / 2;
+    }
+
+    &::-ms-track {
+      @include slider_track;
+      background: transparent;
+      border-color: transparent;
+      color: transparent;
+      border-width: ($thumb-height/2) 0;
+    }
+
+    &::-ms-fill-lower,
+    &::-ms-fill-upper {
+      border-radius: ($track-radius * 2);
     }
   }
 }
