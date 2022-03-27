@@ -22,9 +22,9 @@ export const Sidebar: FC = ({ children }) => {
 
       <div className="sidebar__c">
         <ThemeSelector />
-        <ImageSpaceSetting />
         {view === AppViewEnum.masonryVertical && (
           <>
+            <ImageSpaceSetting />
             <ImageColumnsSetting />
             <CloseImgView />
           </>
