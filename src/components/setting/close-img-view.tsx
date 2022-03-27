@@ -1,6 +1,8 @@
+import { Icon } from '@iconify/react';
 import { FC, useContext } from 'react';
 import { AppContext, AppViewEnum } from '../../context/app-context-provider';
 import { AppImgContext } from '../../context/app-img-provider';
+import { MdButton } from '../md/md-button';
 
 export const CloseImgView: FC = () => {
   const { purgeEvent } = useContext(AppImgContext);
@@ -16,8 +18,9 @@ export const CloseImgView: FC = () => {
   };
 
   return (
-    <button role="button" className="btn btn-warn" onClick={clickEventHandle}>
+    <MdButton hasIcon type="text" onClick={clickEventHandle}>
+      <Icon icon="ic:baseline-close" />
       Close image view
-    </button>
+    </MdButton>
   );
 };
