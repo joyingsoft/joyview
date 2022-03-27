@@ -23,7 +23,7 @@ $track-radius: 6px !default;
       border-radius: $thumb-radius;
       background-color: var(--md-sys-color-primary);
       cursor: pointer;
-      margin-top: -($thumb-height - $track-height)/2; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+      margin-top: -(calc(($thumb-height - $track-height) / 2)); /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
       box-shadow: 0.1rem 0.1rem 0.1rem #00000054, 0 0 0.1rem #0d0d0d4f; /* Add cool effects to your sliders! */
 
       transition-duration: 100ms;
@@ -70,7 +70,7 @@ $track-radius: 6px !default;
     &::-moz-range-track {
       @include slider_track;
       border-radius: $track-radius;
-      height: $track-height / 2;
+      height: calc($track-height / 2);
     }
 
     &::-ms-track {
@@ -78,12 +78,12 @@ $track-radius: 6px !default;
       background: transparent;
       border-color: transparent;
       color: transparent;
-      border-width: ($thumb-height/2) 0;
+      border-width: calc($thumb-height/2) 0;
     }
 
     &::-ms-fill-lower,
     &::-ms-fill-upper {
-      border-radius: ($track-radius * 2);
+      border-radius: calc($track-radius * 2);
     }
   }
 }
