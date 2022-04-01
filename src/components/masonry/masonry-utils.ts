@@ -1,5 +1,6 @@
 import React from 'react';
-import { AppLoadedImgProps } from '../types/app-loaded-img-props';
+import { MasonryVerticalColumnsChild } from './masonry-types';
+import { AppLoadedImgProps } from '../../types/app-loaded-img-props';
 
 export const DEFAULT_COLUMNS = 1;
 
@@ -12,9 +13,7 @@ export const getChildrenInColumns = (
   columns: number,
   children: React.ReactNode,
 ) => {
-  const columnsChildren = new Array<
-    (React.ReactChild | React.ReactFragment | React.ReactPortal)[]
-  >(columns);
+  const columnsChildren = new Array<MasonryVerticalColumnsChild[]>(columns);
 
   const childrenArray = React.Children.toArray(children);
 
@@ -48,7 +47,7 @@ const getEstimatedHeight = (
 
 const getColumnChildrenHeight = (
   loadedImgs: Map<string, AppLoadedImgProps>,
-  col: (React.ReactChild | React.ReactFragment | React.ReactPortal)[],
+  col: MasonryVerticalColumnsChild[],
 ) =>
   col
     .map((v) =>
@@ -60,7 +59,7 @@ const getColumnChildrenHeight = (
 
 const getLastImgHeight = (
   loadedImgs: Map<string, AppLoadedImgProps>,
-  col: (React.ReactChild | React.ReactFragment | React.ReactPortal)[],
+  col: MasonryVerticalColumnsChild[],
 ) => {
   const lastImg = col[col.length - 1];
   return React.isValidElement(lastImg) && lastImg.key
@@ -76,13 +75,9 @@ const getLastImgHeight = (
  * @param loadedImgs: Map<key:string, AppLoadedImgProps>
  * @param columnsChildren existed columnsChildren
  */
-const equalizeChildrenInColumns = (
+export const equalizeChildrenInColumns = (
   loadedImgs: Map<string, AppLoadedImgProps>,
-  columnsChildren: (
-    | React.ReactChild
-    | React.ReactFragment
-    | React.ReactPortal
-  )[][],
+  columnsChildren: MasonryVerticalColumnsChild[][],
 ) => {
   const colHeights = [];
   for (let i = 0; i < columnsChildren.length; i++) {
@@ -116,10 +111,11 @@ export const getEqualizedChildrenInColumns = (
   hasAllRatios: boolean,
   loadedImgs: Map<string, AppLoadedImgProps>,
   children: React.ReactNode,
-) =>
-  hasAllRatios
+) => {
+  return hasAllRatios
     ? equalizeChildrenInColumns(
         loadedImgs,
         getChildrenInColumns(columns, children),
       )
     : getChildrenInColumns(columns, children);
+};

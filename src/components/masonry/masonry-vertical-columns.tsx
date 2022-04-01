@@ -1,14 +1,11 @@
-import React, { FC } from 'react';
+import React, { FC, memo } from 'react';
+import { MasonryVerticalColumnsChild } from './masonry-types';
 import './masonry-vertical.scss';
 
 export const MasonryVerticalColumns: FC<{
-  childrenInColumns: (
-    | React.ReactChild
-    | React.ReactFragment
-    | React.ReactPortal
-  )[][];
+  childrenInColumns: MasonryVerticalColumnsChild[][];
   classNames: string;
-}> = ({ childrenInColumns, classNames }) => {
+}> = memo(({ childrenInColumns, classNames }) => {
   return (
     <>
       {childrenInColumns.map((items, i) => (
@@ -22,4 +19,4 @@ export const MasonryVerticalColumns: FC<{
       ))}
     </>
   );
-};
+});

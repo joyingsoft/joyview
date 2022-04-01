@@ -35,7 +35,9 @@ export const FileImage: FC<{ file: File; classNames?: string }> = ({
   const imgKey = getFilePathName(file);
   const [data, setData] = useState<string | undefined>(undefined);
   const [refEl, setRefEl] = useState<Element | undefined>(undefined);
-  const { isVisible } = useIsElementVisible(refEl);
+  const [isReady, setIsReady] = useState(false);
+  const [onLoadNr, setOnLoadNr] = useState(0);
+  const { isVisible } = useIsElementVisible(onLoadNr > 0 ? refEl : undefined);
   const { loadedImgs, imgDataEvent, imgLoadedEvent, isAllImgsLoaded } =
     useContext(AppImgContext);
 
@@ -44,7 +46,11 @@ export const FileImage: FC<{ file: File; classNames?: string }> = ({
   }, []);
 
   useEffect(() => {
-    if (isVisible) {
+    if (isVisible) setIsReady(true);
+  }, [isVisible]);
+
+  useEffect(() => {
+    if (isReady && !data) {
       const loadedImg = loadedImgs.get(imgKey);
       if (loadedImg?.srcDataURL) {
         setData(loadedImg.srcDataURL);
@@ -56,16 +62,17 @@ export const FileImage: FC<{ file: File; classNames?: string }> = ({
             }
             setData(src);
           })
-          .catch(() => {
+          .catch((e) => {
+            console.log('err', e);
             // todo log error
           });
       }
     }
 
     return () => {
-      setData('');
+      setData(undefined);
     };
-  }, [file, isVisible]);
+  }, [file, isReady]);
 
   useEffect(() => {
     return () => {
@@ -78,7 +85,9 @@ export const FileImage: FC<{ file: File; classNames?: string }> = ({
   const imgOnLoadHandle = (
     e: BaseSyntheticEvent<any, any, HTMLImageElement>,
   ) => {
-    if (data && imgLoadedEvent && !isAllImgsLoaded) {
+    const loadNr = onLoadNr + 1;
+    setOnLoadNr(loadNr);
+    if (!!data && imgLoadedEvent && !isAllImgsLoaded) {
       imgLoadedEvent(imgKey, true, e);
     }
   };

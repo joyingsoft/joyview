@@ -4,7 +4,7 @@ import { MediaSizeName, useMediaSize } from '../../hooks/use-media-size';
 import {
   DEFAULT_COLUMNS,
   getEqualizedChildrenInColumns,
-} from '../../utils/masonry-utils';
+} from './masonry-utils';
 import { MasonryVerticalColumns } from './masonry-vertical-columns';
 import './masonry-vertical.scss';
 
