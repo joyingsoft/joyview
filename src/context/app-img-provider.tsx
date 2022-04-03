@@ -1,4 +1,4 @@
-import { directoryOpen, WellKnownDirectory } from 'browser-fs-access';
+import { directoryOpen } from 'browser-fs-access';
 import { BaseSyntheticEvent, createContext, FC, useState } from 'react';
 import { AppLoadedImgProps } from '../types/app-loaded-img-props';
 import { isMediaTypeImage } from '../utils/file-utils';
@@ -75,7 +75,7 @@ export const AppImgContextProvider: FC<AppImgContextProps> = ({ children }) => {
       // defaults to `false`.
       recursive: true,
       // Suggested directory in which the file picker opens.
-      startIn: 'pictures' as WellKnownDirectory,
+      startIn: 'pictures',
       id: 'projects',
       // determine whether a directory should be entered, return `true` to skip.
       // skipDirectory: (entry) => entry.name[0] === '.',
@@ -83,7 +83,7 @@ export const AppImgContextProvider: FC<AppImgContextProps> = ({ children }) => {
 
     try {
       const fileHandles = await directoryOpen(options);
-      setImageFiles(fileHandles.filter((f) => isMediaTypeImage(f.type)));
+      setImageFiles(fileHandles.filter((f: any) => isMediaTypeImage(f.type)));
     } catch (error) {
       // e.g. : DOMException: The user aborted a request.
       // todo log error.

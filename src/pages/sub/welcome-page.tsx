@@ -1,14 +1,16 @@
 import { Icon } from '@iconify/react';
 import { FC, useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MdButton } from '../../components/md/md-button';
 import { AppImgContext } from '../../context/app-img-provider';
 import './welcome-page.scss';
 
 export const WelcomePage: FC = () => {
   const { getFilesEvent, isLoading } = useContext(AppImgContext);
+  const { t } = useTranslation();
   return (
     <div className="welcome-page m-lg p-lg">
-      <h1>Joying Image Viewer</h1>
+      <h1>{t('joyingImageViewer')}</h1>
       <MdButton
         role="button"
         onClick={getFilesEvent}
@@ -16,16 +18,8 @@ export const WelcomePage: FC = () => {
         isLoading={isLoading}
       >
         <Icon icon="ic:baseline-folder-open" />
-        Open
+        {t('common:open')}
       </MdButton>
-      {/* <button onClick={getFilesEvent} className="btn m-lg"> */}
-      {/* <Icon */}
-      {/* icon={isLoading ? 'fa:spinner' : 'fa:folder-open'} */}
-      {/* // pulse={isLoading} */}
-      {/* /> */}
-      {/* <Icon icon="ic:baseline-loop" /> */}
-      {/* <span className="p-l-sm">Open</span> */}
-      {/* </button> */}
     </div>
   );
 };
