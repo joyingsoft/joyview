@@ -20,7 +20,7 @@ i18n
   .init({
     lng: 'en',
     ns: [nsCommon.namespace],
-    debug: true,
+    debug: false,
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
     },
