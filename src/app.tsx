@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, StrictMode } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { AppContextProvider } from './context/app-context-provider';
 import { AppImgColsContextProvider } from './context/app-img-cols-provider';
@@ -11,16 +11,18 @@ const getAppBasename = (appPath = 'joyview') =>
 
 export const App: FC = () => {
   return (
-    <AppContextProvider>
-      <AppImgContextProvider>
-        <AppSpaceContextProvider>
-          <AppImgColsContextProvider>
-            <BrowserRouter basename={getAppBasename()}>
-              <AppRouter />
-            </BrowserRouter>
-          </AppImgColsContextProvider>
-        </AppSpaceContextProvider>
-      </AppImgContextProvider>
-    </AppContextProvider>
+    <StrictMode>
+      <AppContextProvider>
+        <AppImgContextProvider>
+          <AppSpaceContextProvider>
+            <AppImgColsContextProvider>
+              <BrowserRouter basename={getAppBasename()}>
+                <AppRouter />
+              </BrowserRouter>
+            </AppImgColsContextProvider>
+          </AppSpaceContextProvider>
+        </AppImgContextProvider>
+      </AppContextProvider>
+    </StrictMode>
   );
 };
