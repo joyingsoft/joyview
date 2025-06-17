@@ -1,9 +1,10 @@
 import {
-  BaseSyntheticEvent,
-  FC,
+  type FC,
+  type SyntheticEvent,
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 import { AppImgContext } from '../context/app-img-provider';
@@ -34,16 +35,21 @@ export const FileImage: FC<{ file: File; classNames?: string }> = ({
 }) => {
   const imgKey = getFilePathName(file);
   const [data, setData] = useState<string | undefined>(undefined);
-  const [refEl, setRefEl] = useState<Element | undefined>(undefined);
+  // const [refImgEl, setRefImgEl] = useState<HTMLImageElement | undefined>(
+  //   undefined,
+  // );
   const [isReady, setIsReady] = useState(false);
   const [onLoadNr, setOnLoadNr] = useState(0);
-  const { isVisible } = useIsElementVisible(onLoadNr > 0 ? refEl : undefined);
+  const refImgEl = useRef<HTMLImageElement>(null);
+  const { isVisible } = useIsElementVisible(
+    onLoadNr > 0 ? refImgEl?.current : undefined,
+  );
   const { loadedImgs, imgDataEvent, imgLoadedEvent, isAllImgsLoaded } =
     useContext(AppImgContext);
 
-  let ref = useCallback((el) => {
-    setRefEl(el);
-  }, []);
+  // const imgRef = useCallback((el: HTMLImageElement) => {
+  //   setRefImgEl(el);
+  // }, []);
 
   useEffect(() => {
     if (isVisible) setIsReady(true);
@@ -72,7 +78,7 @@ export const FileImage: FC<{ file: File; classNames?: string }> = ({
     return () => {
       setData(undefined);
     };
-  }, [file, isReady]);
+  }, [file, isReady]); //data, loadedImgs, imgKey, imgDataEvent]);
 
   useEffect(() => {
     return () => {
@@ -82,9 +88,7 @@ export const FileImage: FC<{ file: File; classNames?: string }> = ({
     };
   }, []);
 
-  const imgOnLoadHandle = (
-    e: BaseSyntheticEvent<any, any, HTMLImageElement>,
-  ) => {
+  const imgOnLoadHandle = (e: SyntheticEvent<HTMLImageElement>) => {
     const loadNr = onLoadNr + 1;
     setOnLoadNr(loadNr);
     if (!!data && imgLoadedEvent && !isAllImgsLoaded) {
@@ -101,7 +105,7 @@ export const FileImage: FC<{ file: File; classNames?: string }> = ({
         'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
       }
       alt={trimExtension(file?.name)}
-      ref={ref}
+      ref={refImgEl}
       onLoad={imgOnLoadHandle}
     />
   );

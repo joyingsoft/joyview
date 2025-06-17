@@ -50,33 +50,35 @@ export const useIsElementVisible = (
 ) => {
   const [isVisible, setIsVisible] = useState<boolean>();
 
-  let intersection: IntersectionObserver;
-
-  const stopObserve = () => {
-    if (intersection) {
-      if (element) {
-        // Tells the IntersectionObserver to stop observing target element.
-        intersection.unobserve(element);
-      }
-
-      // Stops the IntersectionObserver object from observing any target.
-      intersection.disconnect();
-    }
-  };
-
-  const intersectionCallback = ([entry]: IntersectionObserverEntry[]) => {
-    if (entry) {
-      const visible = entry.isIntersecting;
-      setIsVisible(visible);
-      if (visible && !fullObserve) {
-        stopObserve();
-      }
-    }
-  };
-
   useEffect(() => {
     if (!element) return;
-    intersection = new IntersectionObserver(intersectionCallback, options);
+
+    const intersectionCallback = ([entry]: IntersectionObserverEntry[]) => {
+      if (entry) {
+        const visible = entry.isIntersecting;
+        setIsVisible(visible);
+        if (visible && !fullObserve) {
+          stopObserve();
+        }
+      }
+    };
+
+    const intersection = new IntersectionObserver(
+      intersectionCallback,
+      options,
+    );
+
+    const stopObserve = () => {
+      if (intersection) {
+        if (element) {
+          // Tells the IntersectionObserver to stop observing target element.
+          intersection.unobserve(element);
+        }
+
+        // Stops the IntersectionObserver object from observing any target.
+        intersection.disconnect();
+      }
+    };
 
     // start observing
     intersection.observe(element);
@@ -84,7 +86,7 @@ export const useIsElementVisible = (
     return () => {
       stopObserve();
     };
-  }, [element, options]);
+  }, [element, options, fullObserve]);
 
   return { isVisible };
 };

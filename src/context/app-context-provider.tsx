@@ -1,30 +1,27 @@
-import { createContext, FC, ReactNode, useEffect, useState } from 'react';
-
-export enum AppThemeEnum {
-  light = 'light',
-  dark = 'dark',
-}
-
-export enum AppViewEnum {
-  welcome = 'welcome',
-  masonryVertical = 'masonryVertical',
-}
+import {
+  createContext,
+  type FC,
+  type ReactNode,
+  useEffect,
+  useState,
+} from 'react';
+import type { AppThemeType, AppViewType } from './types';
 
 type AppContextProps = {
-  viewEvent?: (view: AppViewEnum) => void;
-  themeEvent?: (theme: AppThemeEnum) => void;
+  viewEvent?: (view: AppViewType) => void;
+  themeEvent?: (theme: AppThemeType) => void;
   sidebarOpenEvent?: (isOpen: boolean) => void;
 };
 
 type AppContextStates = {
-  theme: AppThemeEnum;
-  view: AppViewEnum;
+  theme: AppThemeType;
+  view: AppViewType;
   isSidebarOpen: boolean;
 };
 
 const appContextDefault: AppContextStates & AppContextProps = {
-  theme: AppThemeEnum.light,
-  view: AppViewEnum.welcome,
+  theme: 'light',
+  view: 'welcome',
   isSidebarOpen: false,
 };
 
@@ -37,8 +34,8 @@ export const AppContextProvider: FC<
     children?: ReactNode;
   }
 > = ({ children }) => {
-  const [theme, setTheme] = useState<AppThemeEnum>(appContextDefault.theme);
-  const [view, setView] = useState<AppViewEnum>(appContextDefault.view);
+  const [theme, setTheme] = useState<AppThemeType>(appContextDefault.theme);
+  const [view, setView] = useState<AppViewType>(appContextDefault.view);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(
     appContextDefault.isSidebarOpen,
@@ -48,8 +45,8 @@ export const AppContextProvider: FC<
     setTheme(
       window.matchMedia &&
         window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? AppThemeEnum.dark
-        : AppThemeEnum.light,
+        ? 'dark'
+        : 'light',
     );
   }, []);
 

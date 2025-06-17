@@ -1,22 +1,24 @@
 import { useEffect, useState } from 'react';
 
-export enum MediaSizeName {
-  xs = 'xs',
-  sm = 'sm',
-  md = 'md',
-  lg = 'lg',
-  xl = 'xl',
-  xxl = 'xxl',
-}
+export type MediaSizeName = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
 
 export const mediaSizeBreakpoints = {
-  [MediaSizeName.xs]: 0,
-  [MediaSizeName.sm]: 576,
-  [MediaSizeName.md]: 768,
-  [MediaSizeName.lg]: 992,
-  [MediaSizeName.xl]: 1200,
-  [MediaSizeName.xxl]: 1400,
+  ['xs']: 0,
+  ['sm']: 576,
+  ['md']: 768,
+  ['lg']: 992,
+  ['xl']: 1200,
+  ['xxl']: 1400,
 } as const;
+
+export const mediaSizeNames: MediaSizeName[] = [
+  'xs',
+  'sm',
+  'md',
+  'lg',
+  'xl',
+  'xxl',
+];
 
 /**
  *
@@ -47,7 +49,7 @@ export const useMediaSize = (
   useEffect(() => {
     for (let i = 0; i < breakpoints.length; i++) {
       const name = breakpoints[i][0];
-      let mq: MediaQueryList =
+      const mq: MediaQueryList =
         i === breakpoints.length - 1
           ? window.matchMedia(`(min-width: ${breakpoints[i][1]}px)`)
           : window.matchMedia(

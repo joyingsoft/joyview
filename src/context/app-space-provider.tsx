@@ -1,4 +1,4 @@
-import { createContext, FC, useState } from 'react';
+import { createContext, type FC, type ReactNode, useState } from 'react';
 
 type AppSpaceContextProps = {
   changeImagePaddingEvent?: (padding: number) => void;
@@ -14,9 +14,9 @@ const appSpaceContextDefault: AppSpaceContextProps & AppSpaceContextStates = {
 
 export const AppSpaceContext = createContext(appSpaceContextDefault);
 
-export const AppSpaceContextProvider: FC<AppSpaceContextProps> = ({
-  children,
-}) => {
+export const AppSpaceContextProvider: FC<
+  AppSpaceContextProps & { children: ReactNode }
+> = ({ children }) => {
   const [imagePaddingPx, setImagePaddingPx] = useState<number>(
     appSpaceContextDefault.imagePaddingPx,
   );

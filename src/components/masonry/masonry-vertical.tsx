@@ -1,6 +1,10 @@
-import React, { FC, ReactNode, useContext } from 'react';
+import React, { type FC, type ReactNode, useContext } from 'react';
 import { AppImgContext } from '../../context/app-img-provider';
-import { MediaSizeName, useMediaSize } from '../../hooks/use-media-size';
+import {
+  type MediaSizeName,
+  mediaSizeNames,
+  useMediaSize,
+} from '../../hooks/use-media-size';
 import {
   DEFAULT_COLUMNS,
   getEqualizedChildrenInColumns,
@@ -40,7 +44,7 @@ type MasonryVerticalProps = {
 export const MasonryVertical: FC<MasonryVerticalProps> = ({
   columns,
   mediaSizeCols = new Map<MediaSizeName | string, number>(
-    Object.values(MediaSizeName).map((name, index) => [name, index + 1]),
+    mediaSizeNames.map((name, index) => [name, index + 1]),
   ),
   classNames = 'masonry-v',
   columnClassNames = 'masonry-v__c',

@@ -1,4 +1,4 @@
-import { NsCommonType } from '../en/ns-common';
+import type { NsCommonType } from '../en/ns-common';
 
 export const nsCommon: NsCommonType = {
   joyingImageViewer: '乐视',

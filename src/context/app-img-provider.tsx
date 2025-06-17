@@ -1,6 +1,15 @@
-import { directoryOpen } from 'browser-fs-access';
-import { BaseSyntheticEvent, createContext, FC, useState } from 'react';
-import { AppLoadedImgProps } from '../types/app-loaded-img-props';
+import {
+  directoryOpen,
+  type FileWithDirectoryAndFileHandle,
+} from 'browser-fs-access';
+import {
+  type SyntheticEvent,
+  createContext,
+  type FC,
+  useState,
+  type ReactNode,
+} from 'react';
+import type { AppLoadedImgProps } from '../types/app-loaded-img-props';
 import { isMediaTypeImage } from '../utils/file-utils';
 import { getImgAspectRatio } from '../utils/img-utils';
 
@@ -19,7 +28,7 @@ type AppImgContextProps = {
   imgLoadedEvent?: (
     key: string,
     isLoaded: boolean,
-    event?: BaseSyntheticEvent<any, any, HTMLImageElement>,
+    event?: SyntheticEvent<HTMLImageElement>,
   ) => void;
 
   /**
@@ -53,7 +62,11 @@ const appImgContextDefault: AppImgContextProps & AppImgContextStates = {
 
 export const AppImgContext = createContext(appImgContextDefault);
 
-export const AppImgContextProvider: FC<AppImgContextProps> = ({ children }) => {
+export const AppImgContextProvider: FC<
+  AppImgContextProps & {
+    children: ReactNode;
+  }
+> = ({ children }) => {
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(
     appImgContextDefault.isLoading,
@@ -68,6 +81,12 @@ export const AppImgContextProvider: FC<AppImgContextProps> = ({ children }) => {
     appImgContextDefault.loadedImgs,
   );
 
+  const isFileHandle = (
+    handle: FileWithDirectoryAndFileHandle | FileSystemDirectoryHandle,
+  ): handle is FileWithDirectoryAndFileHandle => {
+    return 'type' in handle;
+  };
+
   const getFilesHandle = async () => {
     setIsLoading(true);
     const options = {
@@ -75,7 +94,7 @@ export const AppImgContextProvider: FC<AppImgContextProps> = ({ children }) => {
       // defaults to `false`.
       recursive: true,
       // Suggested directory in which the file picker opens.
-      startIn: 'pictures',
+      startIn: 'pictures' as WellKnownDirectory,
       id: 'projects',
       // determine whether a directory should be entered, return `true` to skip.
       // skipDirectory: (entry) => entry.name[0] === '.',
@@ -83,7 +102,13 @@ export const AppImgContextProvider: FC<AppImgContextProps> = ({ children }) => {
 
     try {
       const fileHandles = await directoryOpen(options);
-      setImageFiles(fileHandles.filter((f: any) => isMediaTypeImage(f.type)));
+      setImageFiles(
+        fileHandles
+          .filter(isFileHandle)
+          .filter((f: FileWithDirectoryAndFileHandle) =>
+            isMediaTypeImage(f.type),
+          ),
+      );
     } catch (error) {
       // e.g. : DOMException: The user aborted a request.
       // todo log error.
@@ -116,7 +141,7 @@ export const AppImgContextProvider: FC<AppImgContextProps> = ({ children }) => {
     key: string,
     data?: string,
     isLoaded?: boolean,
-    event?: BaseSyntheticEvent<any, any, HTMLImageElement>,
+    event?: SyntheticEvent<HTMLImageElement, Event>,
   ) => {
     let img = loadedImgs.get(key);
     if (img) {
@@ -130,14 +155,14 @@ export const AppImgContextProvider: FC<AppImgContextProps> = ({ children }) => {
 
       // no need to reset ratio again, if defined already
       if (!img.aspectRatio && event?.target) {
-        img.aspectRatio = getImgAspectRatio(event.target);
+        img.aspectRatio = getImgAspectRatio(event.currentTarget);
       }
     } else {
       img = {
         srcDataURL: data,
         isLoaded: isLoaded === undefined ? false : isLoaded,
         aspectRatio: event?.target
-          ? getImgAspectRatio(event.target)
+          ? getImgAspectRatio(event.currentTarget)
           : undefined,
       };
     }

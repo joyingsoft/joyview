@@ -1,17 +1,15 @@
 import { Icon } from '@iconify/react';
-import { FC, useContext } from 'react';
+import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AppContext, AppThemeEnum } from '../../context/app-context-provider';
+import { AppContext } from '../../context/app-context-provider';
 import { MdButton } from '../md/md-button';
 
-export const ThemeSelector: FC = () => {
+export const ThemeSelector = () => {
   const { theme, themeEvent: updateThemeEvent } = useContext(AppContext);
   const { t } = useTranslation();
   const handleBtnClick = () => {
     if (updateThemeEvent) {
-      updateThemeEvent(
-        theme === AppThemeEnum.dark ? AppThemeEnum.light : AppThemeEnum.dark,
-      );
+      updateThemeEvent(theme === 'dark' ? 'light' : 'dark');
     }
   };
 
@@ -20,12 +18,10 @@ export const ThemeSelector: FC = () => {
       <MdButton hasIcon type="text" onClick={handleBtnClick}>
         <Icon
           icon={`ic:${
-            theme === AppThemeEnum.light
-              ? 'baseline-nightlight'
-              : 'outline-light-mode'
+            theme === 'light' ? 'baseline-nightlight' : 'outline-light-mode'
           }`}
         />
-        {t(theme === AppThemeEnum.light ? 'dark' : 'light')}
+        {t(theme === 'light' ? 'dark' : 'light')}
       </MdButton>
     </div>
   );

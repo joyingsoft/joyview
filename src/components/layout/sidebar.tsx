@@ -1,6 +1,6 @@
 import { Icon } from '@iconify/react';
-import { FC, useContext } from 'react';
-import { AppContext, AppViewEnum } from '../../context/app-context-provider';
+import { type ReactNode, useContext } from 'react';
+import { AppContext } from '../../context/app-context-provider';
 import { MdButton } from '../md/md-button';
 import { CloseImgView } from '../setting/close-img-view';
 import { ImageColumnsSetting } from '../setting/image-columns-setting';
@@ -8,7 +8,7 @@ import { ImageSpaceSetting } from '../setting/image-space-setting';
 import { LanguageSelector } from '../setting/language-selector';
 import { ThemeSelector } from '../setting/theme-selector';
 
-export const Sidebar: FC = ({ children }) => {
+export const Sidebar = ({ children }: { children?: ReactNode }) => {
   const { isSidebarOpen, sidebarOpenEvent, view } = useContext(AppContext);
 
   return (
@@ -24,7 +24,7 @@ export const Sidebar: FC = ({ children }) => {
       <div className="sidebar__c">
         <ThemeSelector />
         <LanguageSelector />
-        {view === AppViewEnum.masonryVertical && (
+        {view === 'masonryVertical' && (
           <>
             <ImageSpaceSetting />
             <ImageColumnsSetting />

@@ -1,8 +1,8 @@
-import { FC, useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, type ReactNode } from 'react';
 import { Icon } from '@iconify/react';
 import { AppContext } from '../../context/app-context-provider';
 
-export const Container: FC = ({ children }) => {
+export const Container = ({ children }: { children: ReactNode }) => {
   const { isSidebarOpen, sidebarOpenEvent } = useContext(AppContext);
   const [open, setOpen] = useState<boolean>(false);
 

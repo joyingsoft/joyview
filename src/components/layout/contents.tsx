@@ -1,21 +1,20 @@
-import { FC, useContext } from 'react';
+import { type ReactNode, useContext } from 'react';
 import { AppContext } from '../../context/app-context-provider';
-import { MediaSizeName, useMediaSize } from '../../hooks/use-media-size';
-import icssVars from '../../styles/export.icss.scss';
+import { useMediaSize } from '../../hooks/use-media-size';
 
-export const Contents: FC = ({ children }) => {
+export const Contents = ({ children }: { children: ReactNode }) => {
   const { isSidebarOpen } = useContext(AppContext);
   const mediaSize = useMediaSize();
 
   const isLageScreen =
-    mediaSize === MediaSizeName.xxl ||
-    mediaSize === MediaSizeName.xl ||
-    mediaSize === MediaSizeName.lg;
+    mediaSize === 'xxl' || mediaSize === 'xl' || mediaSize === 'lg';
+
+  const sidebarWidth = getComputedStyle(
+    document.documentElement,
+  ).getPropertyValue('--sidebar-width');
 
   const marginLeft =
-    isLageScreen && isSidebarOpen
-      ? `${Number.parseFloat(icssVars.sidebarWidth)}px`
-      : 0;
+    isLageScreen && isSidebarOpen ? `${Number.parseFloat(sidebarWidth)}px` : 0;
 
   return (
     <div

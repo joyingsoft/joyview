@@ -1,5 +1,15 @@
-import { createContext, FC, useEffect, useState } from 'react';
-import { MediaSizeName, useMediaSize } from '../hooks/use-media-size';
+import {
+  createContext,
+  type FC,
+  useEffect,
+  useState,
+  type ReactNode,
+} from 'react';
+import {
+  type MediaSizeName,
+  mediaSizeNames,
+  useMediaSize,
+} from '../hooks/use-media-size';
 
 type AppImgColumnsContextProps = {
   columnsEvent?: (columns: number) => void;
@@ -16,9 +26,9 @@ const appImgColumnsContextDefault: AppImgColumnsContextProps &
 
 export const AppImgColumnsContext = createContext(appImgColumnsContextDefault);
 
-export const AppImgColsContextProvider: FC<AppImgColumnsContextProps> = ({
-  children,
-}) => {
+export const AppImgColsContextProvider: FC<
+  AppImgColumnsContextProps & { children: ReactNode }
+> = ({ children }) => {
   const mediaSizeName = useMediaSize();
 
   const [columns, setColumns] = useState<number | undefined>(
@@ -26,7 +36,7 @@ export const AppImgColsContextProvider: FC<AppImgColumnsContextProps> = ({
   );
 
   const mediaSizeCols = new Map<MediaSizeName | string, number>(
-    Object.values(MediaSizeName).map((name, index) => [name, index + 1]),
+    mediaSizeNames.map((name, index) => [name, index + 1]),
   );
 
   useEffect(() => {
