@@ -1,26 +1,27 @@
-import { FC, StrictMode } from 'react';
+import { StrictMode, useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { AppContextProvider } from './context/app-context-provider';
-import { AppImgColsContextProvider } from './context/app-img-cols-provider';
-import { AppImgContextProvider } from './context/app-img-provider';
-import { AppSpaceContextProvider } from './context/app-space-provider';
+import { AppContextProvider } from './context/AppContextProvider';
+import { ImgColumnContextProvider } from './context/ImgColumnContextProvider';
 import { AppRouter } from './router/app-router';
+import { ImgSpaceContext } from './context/ImgSpaceContext';
+import { AppImgContextProvider } from './context/AppImgContextProvider';
 
 const getAppBasename = (appPath = 'joyview') =>
   window.location.pathname.includes(appPath) ? `/${appPath}` : '/';
 
-export const App: FC = () => {
+export const App = () => {
+  const [imageSpace, setImageSpace] = useState(8);
   return (
     <StrictMode>
       <AppContextProvider>
         <AppImgContextProvider>
-          <AppSpaceContextProvider>
-            <AppImgColsContextProvider>
+          <ImgSpaceContext value={{ imageSpace, setImageSpace }}>
+            <ImgColumnContextProvider>
               <BrowserRouter basename={getAppBasename()}>
                 <AppRouter />
               </BrowserRouter>
-            </AppImgColsContextProvider>
-          </AppSpaceContextProvider>
+            </ImgColumnContextProvider>
+          </ImgSpaceContext>
         </AppImgContextProvider>
       </AppContextProvider>
     </StrictMode>

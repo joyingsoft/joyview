@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState, type ReactNode } from 'react';
 import { Icon } from '@iconify/react';
-import { AppContext } from '../../context/app-context-provider';
+import { AppContext } from '../../context/AppContext';
 
 export const Container = ({ children }: { children: ReactNode }) => {
   const { isSidebarOpen, sidebarOpenEvent } = useContext(AppContext);

@@ -2,71 +2,17 @@ import {
   directoryOpen,
   type FileWithDirectoryAndFileHandle,
 } from 'browser-fs-access';
-import {
-  type SyntheticEvent,
-  createContext,
-  type FC,
-  useState,
-  type ReactNode,
-} from 'react';
+import { type SyntheticEvent, useState, type ReactNode } from 'react';
 import type { AppLoadedImgProps } from '../types/app-loaded-img-props';
 import { isMediaTypeImage } from '../utils/file-utils';
 import { getImgAspectRatio } from '../utils/img-utils';
+import { AppImgContext, appImgContextDefault } from './AppImgContext';
 
-type AppImgContextProps = {
-  /**
-   * 1. Let user select files.
-   * 2. filter images from select files.
-   * 3. update imageFiles state.
-   */
-  getFilesEvent?: () => void;
-  /**
-   * default add one img each call.
-   */
-  imgDataEvent?: (key: string, imgDataURL: string) => void;
-
-  imgLoadedEvent?: (
-    key: string,
-    isLoaded: boolean,
-    event?: SyntheticEvent<HTMLImageElement, Event>,
-  ) => void;
-
-  /**
-   * !!! remove all catched data in app-img-provider.
-   */
-  purgeEvent?: () => void;
-};
-
-type AppImgContextStates = {
-  imageFiles: File[];
-  /**
-   * Is loading files.
-   */
-  isLoading: boolean;
-
-  /**
-   * number of loaded (img.onLoad event) images.
-   */
-  loadedImgs: Map<string, AppLoadedImgProps>;
-  isAllImgsLoaded: boolean;
-  hasAllRatios: boolean;
-};
-
-const appImgContextDefault: AppImgContextProps & AppImgContextStates = {
-  imageFiles: [],
-  isLoading: false,
-  loadedImgs: new Map(),
-  isAllImgsLoaded: false,
-  hasAllRatios: false,
-};
-
-export const AppImgContext = createContext(appImgContextDefault);
-
-export const AppImgContextProvider: FC<
-  AppImgContextProps & {
-    children: ReactNode;
-  }
-> = ({ children }) => {
+export const AppImgContextProvider = ({
+  children,
+}: {
+  children: ReactNode;
+}) => {
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(
     appImgContextDefault.isLoading,

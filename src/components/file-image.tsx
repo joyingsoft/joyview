@@ -1,5 +1,5 @@
 import { type SyntheticEvent, useContext, useEffect, useState } from 'react';
-import { AppImgContext } from '../context/app-img-provider';
+import { AppImgContext } from '../context/AppImgContext';
 import { getFilePathName, trimExtension } from '../utils/file-utils';
 import {
   getResizedDataURL,

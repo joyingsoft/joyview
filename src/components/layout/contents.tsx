@@ -1,5 +1,5 @@
 import { type ReactNode, useContext } from 'react';
-import { AppContext } from '../../context/app-context-provider';
+import { AppContext } from '../../context/AppContext';
 import { useMediaSize } from '../../hooks/use-media-size';
 
 export const Contents = ({ children }: { children: ReactNode }) => {

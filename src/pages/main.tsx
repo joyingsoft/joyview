@@ -4,40 +4,35 @@ import { Container } from '../components/layout/container';
 import { Contents } from '../components/layout/contents';
 import { Sidebar } from '../components/layout/sidebar';
 import { MasonryVertical } from '../components/masonry/masonry-vertical';
-import { AppContext } from '../context/app-context-provider';
-import { AppImgColumnsContext } from '../context/app-img-cols-provider';
-import { AppImgContext } from '../context/app-img-provider';
-import { AppSpaceContext } from '../context/app-space-provider';
+import { AppContext } from '../context/AppContext';
+import { AppImgContext } from '../context/AppImgContext';
 import { getFilePathName } from '../utils/file-utils';
 import { WelcomePage } from './sub/welcome-page';
+import { ImgSpaceContext } from '../context/ImgSpaceContext';
+import { ImgColumnContext } from '../context/ImgColumnContext';
 
 const MainViewDispatcher = () => {
-  const { view, viewEvent } = useContext(AppContext);
+  const { view, setView } = useContext(AppContext);
   const { imageFiles } = useContext(AppImgContext);
-  const { imagePaddingPx } = useContext(AppSpaceContext);
-  const { columns } = useContext(AppImgColumnsContext);
+  const { imageSpace } = useContext(ImgSpaceContext);
+  const { columns } = useContext(ImgColumnContext);
 
   useEffect(() => {
-    if (
-      imageFiles &&
-      imageFiles.length > 0 &&
-      view === 'welcome' &&
-      viewEvent
-    ) {
-      viewEvent('masonryVertical');
+    if (imageFiles && imageFiles.length > 0 && view === 'welcome' && setView) {
+      setView('masonryVertical');
     }
-  }, [imageFiles, view, viewEvent]);
+  }, [imageFiles, view, setView]);
 
   switch (view) {
     case 'masonryVertical':
       return (
         <MasonryVertical
           columns={columns}
-          cssProps={{ padding: `${imagePaddingPx}px` }}
+          cssProps={{ padding: `${imageSpace}px` }}
         >
           {imageFiles.map((img) => (
             <div
-              style={{ padding: `${imagePaddingPx}px` }}
+              style={{ padding: `${imageSpace}px` }}
               key={getFilePathName(img)}
             >
               <FileImage file={img} />

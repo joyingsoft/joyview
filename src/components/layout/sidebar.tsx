@@ -1,6 +1,6 @@
 import { Icon } from '@iconify/react';
 import { type ReactNode, useContext } from 'react';
-import { AppContext } from '../../context/app-context-provider';
+import { AppContext } from '../../context/AppContext';
 import { MdButton } from '../md/md-button';
 import { CloseImgView } from '../setting/close-img-view';
 import { ImageColumnsSetting } from '../setting/image-columns-setting';

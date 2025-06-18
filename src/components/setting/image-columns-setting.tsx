@@ -1,9 +1,9 @@
-import { FC, useContext } from 'react';
-import { AppImgColumnsContext } from '../../context/app-img-cols-provider';
+import { useContext } from 'react';
 import { RangeSlider } from '../slider/range-slider';
+import { ImgColumnContext } from '../../context/ImgColumnContext';
 
-export const ImageColumnsSetting: FC = () => {
-  const { columns, columnsEvent } = useContext(AppImgColumnsContext);
+export const ImageColumnsSetting = () => {
+  const { columns, setColumns } = useContext(ImgColumnContext);
 
   return (
     <RangeSlider
@@ -11,7 +11,7 @@ export const ImageColumnsSetting: FC = () => {
       label="Image columns:"
       showValueInLabel
       value={columns}
-      changeEvent={columnsEvent}
+      changeEvent={setColumns}
       min={1}
       max={16}
     />

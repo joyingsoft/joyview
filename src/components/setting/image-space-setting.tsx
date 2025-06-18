@@ -1,10 +1,9 @@
-import { FC, useContext } from 'react';
-import { AppSpaceContext } from '../../context/app-space-provider';
+import { useContext } from 'react';
 import { RangeSlider } from '../slider/range-slider';
+import { ImgSpaceContext } from '../../context/ImgSpaceContext';
 
-export const ImageSpaceSetting: FC = () => {
-  const { imagePaddingPx, changeImagePaddingEvent } =
-    useContext(AppSpaceContext);
+export const ImageSpaceSetting = () => {
+  const { imageSpace, setImageSpace } = useContext(ImgSpaceContext);
 
   return (
     <RangeSlider
@@ -12,8 +11,8 @@ export const ImageSpaceSetting: FC = () => {
       label="Image spacing:"
       showValueInLabel
       labelValuePostfix="px"
-      value={imagePaddingPx}
-      changeEvent={changeImagePaddingEvent}
+      value={imageSpace}
+      changeEvent={setImageSpace}
       min={0}
       max={64}
     />

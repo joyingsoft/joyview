@@ -1,5 +1,5 @@
 import React, { type ReactNode, useContext } from 'react';
-import { AppImgContext } from '../../context/app-img-provider';
+import { AppImgContext } from '../../context/AppImgContext';
 import {
   type MediaSizeName,
   mediaSizeNames,

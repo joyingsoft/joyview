@@ -11,6 +11,7 @@ $track-radius: 6px !default;
   input[type='range'] {
     width: 100%; /* Specific width is required for Firefox. */
     outline: none;
+    appearance: none;;
     -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
     -webkit-tap-highlight-color: transparent; /* for removing the highlight */
     border-radius: $track-radius;

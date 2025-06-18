@@ -1,15 +1,15 @@
 import { Icon } from '@iconify/react';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AppContext } from '../../context/app-context-provider';
+import { AppContext } from '../../context/AppContext';
 import { MdButton } from '../md/md-button';
 
 export const ThemeSelector = () => {
-  const { theme, themeEvent: updateThemeEvent } = useContext(AppContext);
+  const { theme, setTheme } = useContext(AppContext);
   const { t } = useTranslation();
   const handleBtnClick = () => {
-    if (updateThemeEvent) {
-      updateThemeEvent(theme === 'dark' ? 'light' : 'dark');
+    if (setTheme) {
+      setTheme(theme === 'dark' ? 'light' : 'dark');
     }
   };
 

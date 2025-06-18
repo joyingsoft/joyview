@@ -1,7 +1,6 @@
-import { FC, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './range-slider.scss';
-
-export const RangeSlider: FC<{
+type RangeSliderProps = {
   name: string;
   label?: string;
   showValueInLabel?: boolean;
@@ -11,7 +10,9 @@ export const RangeSlider: FC<{
   value?: number;
   step?: number;
   changeEvent?: (value: number) => void;
-}> = ({
+};
+
+export const RangeSlider = ({
   name,
   label = '',
   showValueInLabel,
@@ -21,7 +22,7 @@ export const RangeSlider: FC<{
   value = 0,
   step = 1,
   changeEvent,
-}) => {
+}: RangeSliderProps) => {
   const [current, setCurrent] = useState<number>(value);
 
   const present = ((current - min) * 100) / (max - min);
@@ -30,7 +31,7 @@ export const RangeSlider: FC<{
     if (value !== current) {
       setCurrent(value);
     }
-  }, [value]);
+  }, [value, current]);
 
   return (
     <div className="range-slider p-md">

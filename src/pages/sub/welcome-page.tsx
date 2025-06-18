@@ -2,7 +2,7 @@ import { Icon } from '@iconify/react';
 import { FC, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdButton } from '../../components/md/md-button';
-import { AppImgContext } from '../../context/app-img-provider';
+import { AppImgContext } from '../../context/AppImgContext';
 import './welcome-page.scss';
 
 export const WelcomePage: FC = () => {
