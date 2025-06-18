@@ -9,14 +9,14 @@ import { LanguageSelector } from '../setting/language-selector';
 import { ThemeSelector } from '../setting/theme-selector';
 
 export const Sidebar = ({ children }: { children?: ReactNode }) => {
-  const { isSidebarOpen, sidebarOpenEvent, view } = useContext(AppContext);
+  const { isSidebarOpen, setIsSidebarOpen, view } = useContext(AppContext);
 
   return (
     <div className={`sidebar${isSidebarOpen ? ' p-lg sidebar__open' : ''}`}>
       <MdButton
         type="outlined"
         hasIcon
-        onClick={() => sidebarOpenEvent && sidebarOpenEvent(false)}
+        onClick={() => setIsSidebarOpen && setIsSidebarOpen(false)}
       >
         <Icon icon="ic:baseline-chevron-left" />
       </MdButton>

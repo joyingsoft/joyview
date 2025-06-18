@@ -3,7 +3,7 @@ import { Icon } from '@iconify/react';
 import { AppContext } from '../../context/AppContext';
 
 export const Container = ({ children }: { children: ReactNode }) => {
-  const { isSidebarOpen, sidebarOpenEvent } = useContext(AppContext);
+  const { isSidebarOpen, setIsSidebarOpen } = useContext(AppContext);
   const [open, setOpen] = useState<boolean>(false);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export const Container = ({ children }: { children: ReactNode }) => {
         <div
           className="bars p-lg"
           role="button"
-          onClick={() => sidebarOpenEvent && sidebarOpenEvent(true)}
+          onClick={() => setIsSidebarOpen && setIsSidebarOpen(true)}
         >
           <Icon icon="ic:baseline-menu" className="icon icon-lg" />
         </div>

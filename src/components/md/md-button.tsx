@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { MdCircularProgress } from './circular-progress/md-circular-progress';
 
 export interface MdButtonProps {
@@ -12,9 +12,7 @@ export interface MdButtonProps {
   isLoading?: boolean;
 }
 
-export const MdButton: FC<
-  MdButtonProps & React.HTMLProps<HTMLButtonElement>
-> = ({
+export const MdButton = ({
   type = 'filled',
   disabled = false,
   hasIcon = false,
@@ -22,7 +20,7 @@ export const MdButton: FC<
   icon,
   children,
   ...props
-}) => {
+}: MdButtonProps & React.HTMLProps<HTMLButtonElement>) => {
   return (
     <button
       {...props}

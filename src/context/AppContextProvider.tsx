@@ -5,7 +5,6 @@ import { AppContext } from './AppContext';
 export const AppContextProvider = ({ children }: { children?: ReactNode }) => {
   const [theme, setTheme] = useState<AppThemeType>('light');
   const [view, setView] = useState<AppViewType>('welcome');
-
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
 
   useEffect(() => {

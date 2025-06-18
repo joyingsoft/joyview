@@ -1,10 +1,8 @@
-import React, { FC } from 'react';
 import { Icon } from '@iconify/react';
 import { useTranslation } from 'react-i18next';
-import { SupportedLanguageCodes } from '../../i18n/i18n-types';
 import { MdButton } from '../md/md-button';
 
-export const LanguageSelector: FC = () => {
+export const LanguageSelector = () => {
   const { t, i18n } = useTranslation();
 
   return (
@@ -13,25 +11,15 @@ export const LanguageSelector: FC = () => {
         hasIcon
         type="text"
         onClick={() => {
-          i18n.changeLanguage(
-            i18n.language === SupportedLanguageCodes.zh
-              ? SupportedLanguageCodes.en
-              : SupportedLanguageCodes.zh,
-          );
+          i18n.changeLanguage(i18n.language === 'zh' ? 'en' : 'zh');
         }}
       >
         <Icon
           icon={`icon-park-outline:${
-            i18n.language === SupportedLanguageCodes.zh ? 'english' : 'chinese'
+            i18n.language === 'zh' ? 'english' : 'chinese'
           }`}
         />
-        {t(
-          `${
-            i18n.language === SupportedLanguageCodes.zh
-              ? SupportedLanguageCodes.en
-              : SupportedLanguageCodes.zh
-          }`,
-        )}
+        {t(`${i18n.language === 'zh' ? 'en' : 'zh'}`)}
       </MdButton>
     </div>
   );
