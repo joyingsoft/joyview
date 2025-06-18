@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 /**
  * @param element: the element to observe.
@@ -11,20 +11,25 @@ import { useEffect, useState } from 'react';
  * https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver
  * https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API
  */
-export const useIsElementVisible = (element?: Element, fullObserve = false) => {
+export const useIsElementVisible = <T extends HTMLElement>(
+  fullObserve = false,
+) => {
   const [isVisible, setIsVisible] = useState<boolean>();
+  const elementRef = useRef<T | null>(null);
+
+  const setElement = useCallback((node: T | null) => {
+    elementRef.current = node;
+  }, []);
 
   useEffect(() => {
-    console.log('-- element ? ', !!element);
+    const element = elementRef.current;
+
     if (!element) return;
 
-    const intersectionCallback = ([entry]: IntersectionObserverEntry[]) => {
+    const observerCallback = ([entry]: IntersectionObserverEntry[]) => {
       if (entry) {
         const visible = entry.isIntersecting;
-        // setIsVisible(() => visible);
-        // flushSync(() => {
         setIsVisible(() => visible);
-        // });
         if (visible && !fullObserve) {
           stopObserve();
         }
@@ -65,30 +70,27 @@ export const useIsElementVisible = (element?: Element, fullObserve = false) => {
       threshold: 0,
     };
 
-    const intersection = new IntersectionObserver(
-      intersectionCallback,
-      options,
-    );
+    const observer = new IntersectionObserver(observerCallback, options);
 
     const stopObserve = () => {
-      if (intersection) {
+      if (observer) {
         if (element) {
           // Tells the IntersectionObserver to stop observing target element.
-          intersection.unobserve(element);
+          observer.unobserve(element);
         }
 
         // Stops the IntersectionObserver object from observing any target.
-        intersection.disconnect();
+        observer.disconnect();
       }
     };
 
     // start observing
-    intersection.observe(element);
+    observer.observe(element);
 
     return () => {
       stopObserve();
     };
-  }, [element, fullObserve]);
+  }, [isVisible, fullObserve, setElement]);
 
-  return { isVisible };
+  return { isVisible, setElement };
 };

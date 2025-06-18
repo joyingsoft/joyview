@@ -1,10 +1,4 @@
-import {
-  type SyntheticEvent,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { type SyntheticEvent, useContext, useEffect, useState } from 'react';
 import { AppImgContext } from '../context/app-img-provider';
 import { getFilePathName, trimExtension } from '../utils/file-utils';
 import {
@@ -13,6 +7,7 @@ import {
   loadImageFromFile,
 } from '../utils/img-utils';
 import { flushSync } from 'react-dom';
+import { useIsElementVisible } from '../hooks/use-is-element-visible';
 
 const getImgDataURL = async (file: File, maxWidth = 1000, maxHeight = 1000) => {
   if (isDefinedResizeType(file.type)) {
@@ -34,65 +29,31 @@ export const FileImage = ({
 }) => {
   const imgKey = getFilePathName(file);
   const [data, setData] = useState<string | undefined>(undefined);
-  const imgRef = useRef<HTMLImageElement>(null);
-  const observerRef = useRef<IntersectionObserver | null>(null);
+  const { isVisible, setElement } = useIsElementVisible();
 
   const { loadedImgs, imgDataEvent, imgLoadedEvent, isAllImgsLoaded } =
     useContext(AppImgContext);
 
   useEffect(() => {
-    const imgElement = imgRef.current;
-    if (!imgElement) return;
-
-    // Lag en lokal kopi for cleanup
-    const currentImgElement = imgElement;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry?.isIntersecting) {
-          // Håndter synlighet
-          if (!data) {
-            const loadedImg = loadedImgs.get(imgKey);
-            if (loadedImg?.srcDataURL) {
-              flushSync(() => {
-                setData(() => loadedImg.srcDataURL);
-              });
-            } else {
-              getImgDataURL(file)
-                .then((src) => {
-                  imgDataEvent?.(imgKey, src);
-                  flushSync(() => {
-                    setData(() => src);
-                  });
-                })
-                .catch(console.error);
-            }
-          }
-
-          // Slutt å observere hvis ikke full observe
-          observer.unobserve(currentImgElement);
-        }
-      },
-      {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.01,
-      },
-    );
-
-    observer.observe(currentImgElement);
-    observerRef.current = observer;
-
-    return () => {
-      if (observerRef.current) {
-        observerRef.current.unobserve(currentImgElement);
+    if (isVisible && !data) {
+      const loadedImg = loadedImgs.get(imgKey);
+      if (loadedImg?.srcDataURL) {
+        setData(() => loadedImg.srcDataURL);
+      } else {
+        getImgDataURL(file)
+          .then((src) => {
+            imgDataEvent?.(imgKey, src);
+            flushSync(() => {
+              setData(() => src);
+            });
+          })
+          .catch(console.error);
       }
-    };
-  }, [file, loadedImgs, imgKey, imgDataEvent, imgRef.current]);
+    }
+  }, [file, loadedImgs, imgKey, imgDataEvent, data, isVisible]);
 
   useEffect(() => {
     return () => {
-      // Rydd opp bildedata ved unmount
       if (data && data.startsWith('blob:')) {
         URL.revokeObjectURL(data);
       }
@@ -104,14 +65,14 @@ export const FileImage = ({
   }, [data, imgKey, imgLoadedEvent]);
 
   const imgOnLoadHandle = (e: SyntheticEvent<HTMLImageElement>) => {
-    if (imgRef.current && data && imgLoadedEvent && !isAllImgsLoaded) {
+    if (data && imgLoadedEvent && !isAllImgsLoaded) {
       imgLoadedEvent(imgKey, true, e);
     }
   };
 
   return (
     <img
-      ref={imgRef}
+      ref={setElement}
       className={classNames}
       src={
         data ||
