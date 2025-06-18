@@ -26,7 +26,7 @@ const MainViewDispatcher = () => {
     ) {
       viewEvent('masonryVertical');
     }
-  }, [imageFiles]);
+  }, [imageFiles, view, viewEvent]);
 
   switch (view) {
     case 'masonryVertical':

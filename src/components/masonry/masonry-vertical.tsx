@@ -1,4 +1,4 @@
-import React, { type FC, type ReactNode, useContext } from 'react';
+import React, { type ReactNode, useContext } from 'react';
 import { AppImgContext } from '../../context/app-img-provider';
 import {
   type MediaSizeName,
@@ -41,7 +41,7 @@ type MasonryVerticalProps = {
   children: ReactNode;
 };
 
-export const MasonryVertical: FC<MasonryVerticalProps> = ({
+export const MasonryVertical = ({
   columns,
   mediaSizeCols = new Map<MediaSizeName | string, number>(
     mediaSizeNames.map((name, index) => [name, index + 1]),
@@ -50,7 +50,7 @@ export const MasonryVertical: FC<MasonryVerticalProps> = ({
   columnClassNames = 'masonry-v__c',
   cssProps,
   children,
-}) => {
+}: MasonryVerticalProps) => {
   const mediaSizeName = useMediaSize();
   const { loadedImgs, hasAllRatios } = useContext(AppImgContext);
 

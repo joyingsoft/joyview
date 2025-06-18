@@ -35,8 +35,6 @@ export const useMediaSize = (
     breakpoints[0][0],
   );
 
-  const mediaQueries = new Map<MediaSizeName | string, MediaQueryList>();
-
   const handleMediaQueryChange = (
     name: MediaSizeName | string,
     matches: boolean,
@@ -47,6 +45,7 @@ export const useMediaSize = (
   };
 
   useEffect(() => {
+    const mediaQueries = new Map<MediaSizeName | string, MediaQueryList>();
     for (let i = 0; i < breakpoints.length; i++) {
       const name = breakpoints[i][0];
       const mq: MediaQueryList =

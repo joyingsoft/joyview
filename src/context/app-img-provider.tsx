@@ -28,7 +28,7 @@ type AppImgContextProps = {
   imgLoadedEvent?: (
     key: string,
     isLoaded: boolean,
-    event?: SyntheticEvent<HTMLImageElement>,
+    event?: SyntheticEvent<HTMLImageElement, Event>,
   ) => void;
 
   /**
@@ -154,20 +154,20 @@ export const AppImgContextProvider: FC<
       }
 
       // no need to reset ratio again, if defined already
-      if (!img.aspectRatio && event?.target) {
+      if (!img.aspectRatio && event?.currentTarget) {
         img.aspectRatio = getImgAspectRatio(event.currentTarget);
       }
     } else {
       img = {
         srcDataURL: data,
         isLoaded: isLoaded === undefined ? false : isLoaded,
-        aspectRatio: event?.target
+        aspectRatio: event?.currentTarget
           ? getImgAspectRatio(event.currentTarget)
           : undefined,
       };
     }
 
-    setLoadedImgs(loadedImgs.set(key, img));
+    setLoadedImgs((prev) => prev.set(key, img));
 
     if (img.isLoaded && checkIsAllImgsLoaded() && !isAllImgsLoaded) {
       setIsAllImgsLoaded(true);

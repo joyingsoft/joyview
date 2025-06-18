@@ -1,111 +1,123 @@
 import {
-  type FC,
   type SyntheticEvent,
-  useCallback,
   useContext,
   useEffect,
   useRef,
   useState,
 } from 'react';
 import { AppImgContext } from '../context/app-img-provider';
-import { useIsElementVisible } from '../hooks/use-is-element-visible';
 import { getFilePathName, trimExtension } from '../utils/file-utils';
 import {
   getResizedDataURL,
   isDefinedResizeType,
   loadImageFromFile,
 } from '../utils/img-utils';
+import { flushSync } from 'react-dom';
 
 const getImgDataURL = async (file: File, maxWidth = 1000, maxHeight = 1000) => {
   if (isDefinedResizeType(file.type)) {
     const img = await loadImageFromFile(file);
     if (img.width > maxWidth || img.height > maxHeight) {
       return getResizedDataURL(img, maxWidth, maxHeight);
-    } else {
-      return img.src;
     }
+    return img.src;
   }
-
   return URL.createObjectURL(file);
 };
 
-export const FileImage: FC<{ file: File; classNames?: string }> = ({
+export const FileImage = ({
   file,
   classNames,
+}: {
+  file: File;
+  classNames?: string;
 }) => {
   const imgKey = getFilePathName(file);
   const [data, setData] = useState<string | undefined>(undefined);
-  // const [refImgEl, setRefImgEl] = useState<HTMLImageElement | undefined>(
-  //   undefined,
-  // );
-  const [isReady, setIsReady] = useState(false);
-  const [onLoadNr, setOnLoadNr] = useState(0);
-  const refImgEl = useRef<HTMLImageElement>(null);
-  const { isVisible } = useIsElementVisible(
-    onLoadNr > 0 ? refImgEl?.current : undefined,
-  );
+  const imgRef = useRef<HTMLImageElement>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+
   const { loadedImgs, imgDataEvent, imgLoadedEvent, isAllImgsLoaded } =
     useContext(AppImgContext);
 
-  // const imgRef = useCallback((el: HTMLImageElement) => {
-  //   setRefImgEl(el);
-  // }, []);
-
   useEffect(() => {
-    if (isVisible) setIsReady(true);
-  }, [isVisible]);
+    const imgElement = imgRef.current;
+    if (!imgElement) return;
 
-  useEffect(() => {
-    if (isReady && !data) {
-      const loadedImg = loadedImgs.get(imgKey);
-      if (loadedImg?.srcDataURL) {
-        setData(loadedImg.srcDataURL);
-      } else {
-        getImgDataURL(file)
-          .then((src) => {
-            if (imgDataEvent) {
-              imgDataEvent(imgKey, src);
+    // Lag en lokal kopi for cleanup
+    const currentImgElement = imgElement;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          // Håndter synlighet
+          if (!data) {
+            const loadedImg = loadedImgs.get(imgKey);
+            if (loadedImg?.srcDataURL) {
+              flushSync(() => {
+                setData(() => loadedImg.srcDataURL);
+              });
+            } else {
+              getImgDataURL(file)
+                .then((src) => {
+                  imgDataEvent?.(imgKey, src);
+                  flushSync(() => {
+                    setData(() => src);
+                  });
+                })
+                .catch(console.error);
             }
-            setData(src);
-          })
-          .catch((e) => {
-            console.log('err', e);
-            // todo log error
-          });
-      }
-    }
+          }
+
+          // Slutt å observere hvis ikke full observe
+          observer.unobserve(currentImgElement);
+        }
+      },
+      {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.01,
+      },
+    );
+
+    observer.observe(currentImgElement);
+    observerRef.current = observer;
 
     return () => {
-      setData(undefined);
+      if (observerRef.current) {
+        observerRef.current.unobserve(currentImgElement);
+      }
     };
-  }, [file, isReady]); //data, loadedImgs, imgKey, imgDataEvent]);
+  }, [file, loadedImgs, imgKey, imgDataEvent, imgRef.current]);
 
   useEffect(() => {
     return () => {
+      // Rydd opp bildedata ved unmount
+      if (data && data.startsWith('blob:')) {
+        URL.revokeObjectURL(data);
+      }
+
       if (imgLoadedEvent) {
         imgLoadedEvent(imgKey, false);
       }
     };
-  }, []);
+  }, [data, imgKey, imgLoadedEvent]);
 
   const imgOnLoadHandle = (e: SyntheticEvent<HTMLImageElement>) => {
-    const loadNr = onLoadNr + 1;
-    setOnLoadNr(loadNr);
-    if (!!data && imgLoadedEvent && !isAllImgsLoaded) {
+    if (imgRef.current && data && imgLoadedEvent && !isAllImgsLoaded) {
       imgLoadedEvent(imgKey, true, e);
     }
   };
 
   return (
     <img
+      ref={imgRef}
       className={classNames}
       src={
         data ||
-        // eslint-disable-next-line max-len
         'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
       }
       alt={trimExtension(file?.name)}
-      ref={refImgEl}
       onLoad={imgOnLoadHandle}
     />
   );
