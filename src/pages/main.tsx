@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { FileImage } from '../components/file-image';
 import { Container } from '../components/layout/container';
 import { Contents } from '../components/layout/contents';
@@ -10,12 +10,23 @@ import { getFilePathName } from '../utils/file-utils';
 import { WelcomePage } from './sub/welcome-page';
 import { ImgSpaceContext } from '../context/ImgSpaceContext';
 import { ImgColumnContext } from '../context/ImgColumnContext';
+import { Slideshow } from '../components/slideshow/Slideshow';
 
 const MainViewDispatcher = () => {
+  const [slideshowIndex, setSlideshowIndex] = useState<number>();
   const { view, setView } = useContext(AppContext);
   const { imageFiles } = useContext(AppImgContext);
   const { imageSpace } = useContext(ImgSpaceContext);
   const { columns } = useContext(ImgColumnContext);
+
+  const handleFileChange = (isNext: boolean) => {
+    if (slideshowIndex === undefined || imageFiles.length === 0) return;
+
+    const nextIndex = isNext
+      ? (slideshowIndex + 1) % imageFiles.length
+      : (slideshowIndex - 1 + imageFiles.length) % imageFiles.length;
+    setSlideshowIndex(nextIndex);
+  };
 
   useEffect(() => {
     if (imageFiles && imageFiles.length > 0 && view === 'welcome' && setView) {
@@ -30,8 +41,18 @@ const MainViewDispatcher = () => {
           columns={columns}
           cssProps={{ padding: `${imageSpace}px` }}
         >
-          {imageFiles.map((img) => (
+          <Slideshow
+            onFileChange={handleFileChange}
+            onClose={() => setSlideshowIndex(undefined)}
+            file={
+              slideshowIndex !== undefined
+                ? imageFiles[slideshowIndex]
+                : undefined
+            }
+          />
+          {imageFiles.map((img, index) => (
             <div
+              onClick={() => setSlideshowIndex(index)}
               style={{ padding: `${imageSpace}px` }}
               key={getFilePathName(img)}
             >
