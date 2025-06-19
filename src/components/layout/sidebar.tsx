@@ -2,11 +2,11 @@ import { Icon } from '@iconify/react';
 import { type ReactNode, useContext } from 'react';
 import { AppContext } from '../../context/AppContext';
 import { MdButton } from '../md/md-button';
-import { CloseImgView } from '../setting/close-img-view';
-import { ImageColumnsSetting } from '../setting/image-columns-setting';
-import { ImageSpaceSetting } from '../setting/image-space-setting';
-import { LanguageSelector } from '../setting/language-selector';
-import { ThemeSelector } from '../setting/theme-selector';
+import { CloseImgView } from '../setting/CloseImgView';
+import { ImageColumnsSetting } from '../setting/ImageColumnsSetting';
+import { ImageSpaceSetting } from '../setting/ImageSpaceSetting';
+import { LanguageSelector } from '../setting/LanguageSelector';
+import { ThemeSelector } from '../setting/ThemeSelector';
 
 export const Sidebar = ({ children }: { children?: ReactNode }) => {
   const { isSidebarOpen, setIsSidebarOpen, view } = useContext(AppContext);

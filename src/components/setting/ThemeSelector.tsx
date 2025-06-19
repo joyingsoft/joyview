@@ -3,13 +3,16 @@ import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AppContext } from '../../context/AppContext';
 import { MdButton } from '../md/md-button';
+import { LocalStorageUtils } from '../../utils/local-storage';
 
 export const ThemeSelector = () => {
   const { theme, setTheme } = useContext(AppContext);
   const { t } = useTranslation();
   const handleBtnClick = () => {
     if (setTheme) {
-      setTheme(theme === 'dark' ? 'light' : 'dark');
+      const newTheme = theme === 'dark' ? 'light' : 'dark';
+      setTheme(newTheme);
+      LocalStorageUtils.save('theme', newTheme);
     }
   };
 

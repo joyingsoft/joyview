@@ -5,13 +5,18 @@ import { ImgColumnContext } from '../../context/ImgColumnContext';
 export const ImageColumnsSetting = () => {
   const { columns, setColumns } = useContext(ImgColumnContext);
 
+  const handleChange = (value: number) => {
+    setColumns(value);
+    // LocalStorageUtils.save('imageColumns', value.toString());
+  };
+
   return (
     <RangeSlider
       name="columns"
       label="Image columns:"
       showValueInLabel
       value={columns}
-      changeEvent={setColumns}
+      changeEvent={handleChange}
       min={1}
       max={16}
     />
