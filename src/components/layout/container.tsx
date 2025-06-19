@@ -1,4 +1,10 @@
-import { useContext, useEffect, useState, type ReactNode } from 'react';
+import {
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+  type SyntheticEvent,
+} from 'react';
 import { Icon } from '@iconify/react';
 import { AppContext } from '../../context/AppContext';
 
@@ -16,14 +22,14 @@ export const Container = ({ children }: { children: ReactNode }) => {
     }
   }, [isSidebarOpen]);
 
+  const barsClickHandler = (e: SyntheticEvent) => {
+    e.stopPropagation();
+    setIsSidebarOpen(true);
+  };
   return (
     <div className="container">
       {!open && (
-        <div
-          className="bars p-lg"
-          role="button"
-          onClick={() => setIsSidebarOpen && setIsSidebarOpen(true)}
-        >
+        <div className="bars p-lg" role="button" onClick={barsClickHandler}>
           <Icon icon="ic:baseline-menu" className="icon icon-lg" />
         </div>
       )}

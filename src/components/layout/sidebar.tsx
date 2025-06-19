@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import { type ReactNode, useContext } from 'react';
+import { type ReactNode, useContext, useEffect, useRef } from 'react';
 import { AppContext } from '../../context/AppContext';
 import { MdButton } from '../md/md-button';
 import { CloseImgView } from '../setting/CloseImgView';
@@ -9,15 +9,34 @@ import { LanguageSelector } from '../setting/LanguageSelector';
 import { ThemeSelector } from '../setting/ThemeSelector';
 
 export const Sidebar = ({ children }: { children?: ReactNode }) => {
+  const sidebarRef = useRef<HTMLDivElement>(null);
   const { isSidebarOpen, setIsSidebarOpen, view } = useContext(AppContext);
 
+  useEffect(() => {
+    const clickEventHandler = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (sidebarRef.current && !sidebarRef.current.contains(target)) {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    if (isSidebarOpen) {
+      document.addEventListener('click', clickEventHandler);
+    } else {
+      document.removeEventListener('click', clickEventHandler);
+    }
+
+    return () => {
+      document.removeEventListener('click', clickEventHandler);
+    };
+  }, [sidebarRef, isSidebarOpen, setIsSidebarOpen]);
+
   return (
-    <div className={`sidebar${isSidebarOpen ? ' p-lg sidebar__open' : ''}`}>
-      <MdButton
-        type="outlined"
-        hasIcon
-        onClick={() => setIsSidebarOpen && setIsSidebarOpen(false)}
-      >
+    <div
+      ref={sidebarRef}
+      className={`sidebar${isSidebarOpen ? ' p-lg sidebar__open' : ''}`}
+    >
+      <MdButton type="outlined" hasIcon onClick={() => setIsSidebarOpen(false)}>
         <Icon icon="ic:baseline-chevron-left" />
       </MdButton>
 
