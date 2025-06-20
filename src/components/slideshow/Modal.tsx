@@ -5,9 +5,10 @@ type Props = {
   show?: boolean;
   onClose?: () => void;
   children?: React.ReactNode;
+  onClick?: (event: React.MouseEvent<HTMLDialogElement>) => void;
 };
 
-export function Modal({ show, onClose, children }: Props) {
+export function Modal({ show, onClose, children, onClick }: Props) {
   const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -29,7 +30,7 @@ export function Modal({ show, onClose, children }: Props) {
   };
 
   return (
-    <dialog ref={ref} onClose={handleClose} className="modal">
+    <dialog ref={ref} onClose={handleClose} className="modal" onClick={onClick}>
       <IconBtn
         icon="material-symbols:close-small-rounded"
         className="close"
