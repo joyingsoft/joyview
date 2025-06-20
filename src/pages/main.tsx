@@ -1,12 +1,10 @@
-import { useContext, useEffect, useState } from 'react';
-import { FileImage } from '../components/file-image';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { Container } from '../components/layout/container';
 import { Contents } from '../components/layout/contents';
 import { Sidebar } from '../components/layout/sidebar';
-import { MasonryVertical } from '../components/masonry/masonry-vertical';
+import { MasonryVertical } from '../components/masonry/MasonryVertical';
 import { AppContext } from '../context/AppContext';
 import { AppImgContext } from '../context/AppImgContext';
-import { getFilePathName } from '../utils/file-utils';
 import { WelcomePage } from './sub/welcome-page';
 import { ImgSpaceContext } from '../context/ImgSpaceContext';
 import { ImgColumnContext } from '../context/ImgColumnContext';
@@ -19,14 +17,21 @@ const MainViewDispatcher = () => {
   const { imageSpace } = useContext(ImgSpaceContext);
   const { columns } = useContext(ImgColumnContext);
 
-  const handleFileChange = (isNext: boolean) => {
-    if (slideshowIndex === undefined || imageFiles.length === 0) return;
-
-    const nextIndex = isNext
-      ? (slideshowIndex + 1) % imageFiles.length
-      : (slideshowIndex - 1 + imageFiles.length) % imageFiles.length;
-    setSlideshowIndex(nextIndex);
+  const handleItemClick = (index: number) => {
+    setSlideshowIndex(index);
   };
+
+  const handleFileChange = useCallback(
+    (isNext: boolean) => {
+      if (slideshowIndex === undefined || imageFiles.length === 0) return;
+
+      const nextIndex = isNext
+        ? (slideshowIndex + 1) % imageFiles.length
+        : (slideshowIndex - 1 + imageFiles.length) % imageFiles.length;
+      setSlideshowIndex(nextIndex);
+    },
+    [slideshowIndex, imageFiles.length],
+  );
 
   useEffect(() => {
     if (imageFiles && imageFiles.length > 0 && view === 'welcome' && setView) {
@@ -40,6 +45,7 @@ const MainViewDispatcher = () => {
         <MasonryVertical
           columns={columns}
           cssProps={{ padding: `${imageSpace}px` }}
+          onItemClick={handleItemClick}
         >
           <Slideshow
             onFileChange={handleFileChange}
@@ -50,15 +56,6 @@ const MainViewDispatcher = () => {
                 : undefined
             }
           />
-          {imageFiles.map((img, index) => (
-            <div
-              onClick={() => setSlideshowIndex(index)}
-              style={{ padding: `${imageSpace}px` }}
-              key={getFilePathName(img)}
-            >
-              <FileImage file={img} />
-            </div>
-          ))}
         </MasonryVertical>
       );
     case 'welcome':

@@ -9,7 +9,7 @@ import {
 import { flushSync } from 'react-dom';
 import { useIsElementVisible } from '../hooks/use-is-element-visible';
 
-const getImgDataURL = async (file: File, maxWidth = 1000, maxHeight = 1000) => {
+const getImgDataURL = async (file: File, maxWidth = 500, maxHeight = 500) => {
   if (isDefinedResizeType(file.type)) {
     const img = await loadImageFromFile(file);
     if (img.width > maxWidth || img.height > maxHeight) {
