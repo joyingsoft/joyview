@@ -1,4 +1,1 @@
-export enum SupportedLanguageCodes {
-  en = 'en',
-  zh = 'zh',
-}
+export type SupportedLanguageCodes = 'en' | 'zh';

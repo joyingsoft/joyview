@@ -1,7 +1,7 @@
 @use 'sass:map';
-@import './variables.scss';
-@import './theme.scss';
-@import './spacing.scss';
+@use './variables.scss' as *;
+@use './theme.scss';
+@use './spacing.scss' as *;
 
 .container {
   height: 100%;

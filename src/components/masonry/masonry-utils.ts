@@ -1,6 +1,6 @@
 import React from 'react';
-import { MasonryVerticalColumnsChild } from './masonry-types';
-import { AppLoadedImgProps } from '../../types/app-loaded-img-props';
+import type { MasonryVerticalColumnsChild } from './masonry-types';
+import type { AppLoadedImgProps } from '../../types/app-loaded-img-props';
 
 export const DEFAULT_COLUMNS = 1;
 

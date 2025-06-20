@@ -1,5 +1,5 @@
 @use 'sass:map';
-@import './variables';
+@use './variables' as *;
 
 @mixin create-space($name, $space) {
   @each $pm-s, $pm-name in ('p': 'padding', 'm': 'margin') {

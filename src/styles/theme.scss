@@ -1,4 +1,4 @@
-@import './variables';
+@use './variables' as *;
 
 // [app-theme='dark'] {
 //   --theme-text-primary: rgba(255, 255, 255, 0.87);

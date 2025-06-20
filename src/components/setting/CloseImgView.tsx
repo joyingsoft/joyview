@@ -1,21 +1,21 @@
 import { Icon } from '@iconify/react';
-import { FC, useContext } from 'react';
+import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AppContext, AppViewEnum } from '../../context/app-context-provider';
-import { AppImgContext } from '../../context/app-img-provider';
+import { AppContext } from '../../context/AppContext';
+import { AppImgContext } from '../../context/AppImgContext';
 import { MdButton } from '../md/md-button';
 
-export const CloseImgView: FC = () => {
+export const CloseImgView = () => {
   const { purgeEvent } = useContext(AppImgContext);
-  const { view, viewEvent } = useContext(AppContext);
+  const { view, setView } = useContext(AppContext);
   const { t } = useTranslation();
 
   const clickEventHandle = () => {
     if (purgeEvent) {
       purgeEvent();
     }
-    if (view !== AppViewEnum.welcome && viewEvent) {
-      viewEvent(AppViewEnum.welcome);
+    if (view !== 'welcome' && setView) {
+      setView('welcome');
     }
   };
 

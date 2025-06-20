@@ -1,9 +1,15 @@
-import { FC, useContext, useEffect, useState } from 'react';
+import {
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+  type SyntheticEvent,
+} from 'react';
 import { Icon } from '@iconify/react';
-import { AppContext } from '../../context/app-context-provider';
+import { AppContext } from '../../context/AppContext';
 
-export const Container: FC = ({ children }) => {
-  const { isSidebarOpen, sidebarOpenEvent } = useContext(AppContext);
+export const Container = ({ children }: { children: ReactNode }) => {
+  const { isSidebarOpen, setIsSidebarOpen } = useContext(AppContext);
   const [open, setOpen] = useState<boolean>(false);
 
   useEffect(() => {
@@ -16,14 +22,14 @@ export const Container: FC = ({ children }) => {
     }
   }, [isSidebarOpen]);
 
+  const barsClickHandler = (e: SyntheticEvent) => {
+    e.stopPropagation();
+    setIsSidebarOpen(true);
+  };
   return (
     <div className="container">
       {!open && (
-        <div
-          className="bars p-lg"
-          role="button"
-          onClick={() => sidebarOpenEvent && sidebarOpenEvent(true)}
-        >
+        <div className="bars p-lg" role="button" onClick={barsClickHandler}>
           <Icon icon="ic:baseline-menu" className="icon icon-lg" />
         </div>
       )}

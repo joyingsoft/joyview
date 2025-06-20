@@ -1,11 +1,11 @@
 import { Icon } from '@iconify/react';
-import { FC, useContext } from 'react';
+import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdButton } from '../../components/md/md-button';
-import { AppImgContext } from '../../context/app-img-provider';
+import { AppImgContext } from '../../context/AppImgContext';
 import './welcome-page.scss';
 
-export const WelcomePage: FC = () => {
+export const WelcomePage = () => {
   const { getFilesEvent, isLoading } = useContext(AppImgContext);
   const { t } = useTranslation();
   return (

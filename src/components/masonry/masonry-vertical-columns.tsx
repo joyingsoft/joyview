@@ -1,5 +1,5 @@
-import React, { FC, memo } from 'react';
-import { MasonryVerticalColumnsChild } from './masonry-types';
+import { type FC, memo } from 'react';
+import type { MasonryVerticalColumnsChild } from './masonry-types';
 import './masonry-vertical.scss';
 
 export const MasonryVerticalColumns: FC<{

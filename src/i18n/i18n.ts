@@ -12,7 +12,6 @@ export const resources = {
   zh: { [nsCommon.namespace]: nsCommonCn },
 } as const;
 
-// eslint-disable-next-line import/no-named-as-default-member
 i18n
   .use(I18NextHttpBackend)
   .use(I18nextBrowserLanguageDetector)

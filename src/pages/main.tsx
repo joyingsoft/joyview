@@ -1,43 +1,59 @@
-import { FC, useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { FileImage } from '../components/file-image';
 import { Container } from '../components/layout/container';
 import { Contents } from '../components/layout/contents';
 import { Sidebar } from '../components/layout/sidebar';
 import { MasonryVertical } from '../components/masonry/masonry-vertical';
-import { AppContext, AppViewEnum } from '../context/app-context-provider';
-import { AppImgColumnsContext } from '../context/app-img-cols-provider';
-import { AppImgContext } from '../context/app-img-provider';
-import { AppSpaceContext } from '../context/app-space-provider';
+import { AppContext } from '../context/AppContext';
+import { AppImgContext } from '../context/AppImgContext';
 import { getFilePathName } from '../utils/file-utils';
 import { WelcomePage } from './sub/welcome-page';
+import { ImgSpaceContext } from '../context/ImgSpaceContext';
+import { ImgColumnContext } from '../context/ImgColumnContext';
+import { Slideshow } from '../components/slideshow/Slideshow';
 
-const MainViewDispatcher: FC = () => {
-  const { view, viewEvent } = useContext(AppContext);
+const MainViewDispatcher = () => {
+  const [slideshowIndex, setSlideshowIndex] = useState<number>();
+  const { view, setView } = useContext(AppContext);
   const { imageFiles } = useContext(AppImgContext);
-  const { imagePaddingPx } = useContext(AppSpaceContext);
-  const { columns } = useContext(AppImgColumnsContext);
+  const { imageSpace } = useContext(ImgSpaceContext);
+  const { columns } = useContext(ImgColumnContext);
+
+  const handleFileChange = (isNext: boolean) => {
+    if (slideshowIndex === undefined || imageFiles.length === 0) return;
+
+    const nextIndex = isNext
+      ? (slideshowIndex + 1) % imageFiles.length
+      : (slideshowIndex - 1 + imageFiles.length) % imageFiles.length;
+    setSlideshowIndex(nextIndex);
+  };
 
   useEffect(() => {
-    if (
-      imageFiles &&
-      imageFiles.length > 0 &&
-      view === AppViewEnum.welcome &&
-      viewEvent
-    ) {
-      viewEvent(AppViewEnum.masonryVertical);
+    if (imageFiles && imageFiles.length > 0 && view === 'welcome' && setView) {
+      setView('masonryVertical');
     }
-  }, [imageFiles]);
+  }, [imageFiles, view, setView]);
 
   switch (view) {
-    case AppViewEnum.masonryVertical:
+    case 'masonryVertical':
       return (
         <MasonryVertical
           columns={columns}
-          cssProps={{ padding: `${imagePaddingPx}px` }}
+          cssProps={{ padding: `${imageSpace}px` }}
         >
-          {imageFiles.map((img) => (
+          <Slideshow
+            onFileChange={handleFileChange}
+            onClose={() => setSlideshowIndex(undefined)}
+            file={
+              slideshowIndex !== undefined
+                ? imageFiles[slideshowIndex]
+                : undefined
+            }
+          />
+          {imageFiles.map((img, index) => (
             <div
-              style={{ padding: `${imagePaddingPx}px` }}
+              onClick={() => setSlideshowIndex(index)}
+              style={{ padding: `${imageSpace}px` }}
               key={getFilePathName(img)}
             >
               <FileImage file={img} />
@@ -45,14 +61,14 @@ const MainViewDispatcher: FC = () => {
           ))}
         </MasonryVertical>
       );
-    case AppViewEnum.welcome:
+    case 'welcome':
       return <WelcomePage />;
     default:
       return <WelcomePage />;
   }
 };
 
-export const Main: FC = () => {
+export const Main = () => {
   return (
     <Container>
       <Sidebar />

@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React from 'react';
 
 import './md-circular-progress.scss';
 
-export const MdCircularProgress: FC<React.SVGProps<SVGSVGElement>> = ({
+export const MdCircularProgress = ({
   ...props
-}) => {
+}: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
