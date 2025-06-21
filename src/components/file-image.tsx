@@ -29,7 +29,7 @@ export const FileImage = ({
 }) => {
   const imgKey = getFilePathName(file);
   const [data, setData] = useState<string | undefined>(undefined);
-  const { isVisible, setElement } = useIsElementVisible();
+  const { isVisible, elementRef } = useIsElementVisible<HTMLImageElement>();
 
   const { loadedImgs, imgDataEvent, imgLoadedEvent, isAllImgsLoaded } =
     useContext(AppImgContext);
@@ -72,7 +72,7 @@ export const FileImage = ({
 
   return (
     <img
-      ref={setElement}
+      ref={elementRef}
       className={classNames}
       src={
         data ||

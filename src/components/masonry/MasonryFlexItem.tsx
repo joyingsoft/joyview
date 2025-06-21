@@ -1,7 +1,7 @@
 import React, { useCallback, useContext } from 'react';
-import { useIntersectionObserver } from '../../hooks/use-intersection-observer';
 import { FileToImg } from '../FileToImg';
 import { ImgSpaceContext } from '../../context/ImgSpaceContext';
+import { useIsElementVisible } from '../../hooks/use-is-element-visible';
 
 interface MasonryFlexItemProps {
   file: File;
@@ -13,7 +13,7 @@ interface MasonryFlexItemProps {
 export const MasonryFlexItem = React.memo(
   ({ file, index, onItemClick, isVisible }: MasonryFlexItemProps) => {
     const { imageSpace } = useContext(ImgSpaceContext);
-    const { elementRef, hasBeenVisible } = useIntersectionObserver({
+    const { elementRef, hasBeenVisible } = useIsElementVisible<HTMLDivElement>({
       rootMargin: '300px',
     });
 

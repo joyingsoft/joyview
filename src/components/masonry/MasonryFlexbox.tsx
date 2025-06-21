@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { MasonryFlexItem } from './MasonryFlexItem';
-import { useIntersectionObserver } from '../../hooks/use-intersection-observer';
+import { useIsElementVisible } from '../../hooks/use-is-element-visible';
 
 interface MasonryFlexboxProps {
   items: File[];
@@ -36,12 +36,13 @@ export const MasonryFlexbox = ({
   }, [items, columns, loadedItems]);
 
   // Load more items when scrolling near bottom
-  const { elementRef: loadMoreRef } = useIntersectionObserver({
+  const { elementRef: loadMoreRef } = useIsElementVisible<HTMLDivElement>({
     rootMargin: '200px',
     threshold: 0.1,
   });
 
   const loadMoreItems = useCallback(() => {
+    console.log('Loading more items...');
     if (loadedItems < items.length) {
       setLoadedItems((prev) => Math.min(prev + itemsPerBatch, items.length));
     }

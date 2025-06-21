@@ -6,6 +6,7 @@ import {
   isDefinedResizeType,
   loadImageFromFile,
 } from '../utils/img-utils';
+import { flushSync } from 'react-dom';
 
 const getImgDataURL = async (
   file: File,
@@ -50,7 +51,9 @@ export const FileToImg = ({ file, priority = false }: Props) => {
       getImgDataURL(file)
         .then((src) => {
           imgDataEvent?.(imgKey, src);
-          setImageSrc(src);
+          flushSync(() => {
+            setImageSrc(src);
+          });
         })
         .catch(console.error);
     }
