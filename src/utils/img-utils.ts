@@ -96,3 +96,19 @@ export const getResizedDataURL = (
 export const getImgAspectRatio = (img: HTMLImageElement) => {
   return img.naturalWidth / img.naturalHeight;
 };
+
+export const getImgObjectURL = async (
+  file: File,
+  resize = false,
+  maxWidth = 1000,
+  maxHeight = 1000,
+) => {
+  if (resize && isDefinedResizeType(file.type)) {
+    const img = await loadImageFromFile(file);
+    if (img.width > maxWidth || img.height > maxHeight) {
+      return getResizedDataURL(img, maxWidth, maxHeight);
+    }
+    return img.src;
+  }
+  return URL.createObjectURL(file);
+};

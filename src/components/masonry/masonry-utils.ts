@@ -1,5 +1,4 @@
-import React from 'react';
-import type { MasonryVerticalColumnsChild } from './masonry-types';
+import React, { type ReactNode } from 'react';
 import type { AppLoadedImgProps } from '../../types/app-loaded-img-props';
 
 export const DEFAULT_COLUMNS = 1;
@@ -13,7 +12,7 @@ export const getChildrenInColumns = (
   columns: number,
   children: React.ReactNode,
 ) => {
-  const columnsChildren = new Array<MasonryVerticalColumnsChild[]>(columns);
+  const columnsChildren = new Array<ReactNode[]>(columns);
 
   const childrenArray = React.Children.toArray(children);
 
@@ -47,7 +46,7 @@ const getEstimatedHeight = (
 
 const getColumnChildrenHeight = (
   loadedImgs: Map<string, AppLoadedImgProps>,
-  col: MasonryVerticalColumnsChild[],
+  col: ReactNode[],
 ) =>
   col
     .map((v) =>
@@ -59,7 +58,7 @@ const getColumnChildrenHeight = (
 
 const getLastImgHeight = (
   loadedImgs: Map<string, AppLoadedImgProps>,
-  col: MasonryVerticalColumnsChild[],
+  col: ReactNode[],
 ) => {
   const lastImg = col[col.length - 1];
   return React.isValidElement(lastImg) && lastImg.key
@@ -77,7 +76,7 @@ const getLastImgHeight = (
  */
 export const equalizeChildrenInColumns = (
   loadedImgs: Map<string, AppLoadedImgProps>,
-  columnsChildren: MasonryVerticalColumnsChild[][],
+  columnsChildren: ReactNode[][],
 ) => {
   const colHeights = [];
   for (let i = 0; i < columnsChildren.length; i++) {

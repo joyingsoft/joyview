@@ -5,6 +5,7 @@ export const AppRouter = () => {
   return (
     <Routes>
       <Route path="/" element={<Main />}></Route>
+      <Route path="/:version" element={<Main />}></Route>
     </Routes>
   );
 };
