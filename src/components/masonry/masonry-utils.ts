@@ -30,7 +30,7 @@ export const getChildrenInColumns = (
 };
 
 const getKeyValue = (key: string | number) => {
-  return key.toString().replace('.$', '');
+  return key.toString().replace('.0:$', '');
 };
 
 const HEIGHT_BASE_VALUE = 100;
@@ -47,14 +47,15 @@ const getEstimatedHeight = (
 const getColumnChildrenHeight = (
   loadedImgs: Map<string, AppLoadedImgProps>,
   col: ReactNode[],
-) =>
-  col
+) => {
+  return col
     .map((v) =>
       React.isValidElement(v) && v.key
         ? getEstimatedHeight(loadedImgs, v.key)
         : 0,
     )
     .reduce((p, c) => p + c, 0);
+};
 
 const getLastImgHeight = (
   loadedImgs: Map<string, AppLoadedImgProps>,
@@ -78,11 +79,9 @@ export const equalizeChildrenInColumns = (
   loadedImgs: Map<string, AppLoadedImgProps>,
   columnsChildren: ReactNode[][],
 ) => {
-  const colHeights = [];
-  for (let i = 0; i < columnsChildren.length; i++) {
-    colHeights[i] = getColumnChildrenHeight(loadedImgs, columnsChildren[i]);
-  }
-
+  const colHeights = columnsChildren.map((column) =>
+    getColumnChildrenHeight(loadedImgs, column),
+  );
   const minColH = Math.min(...colHeights);
   const minColHIndex = colHeights.indexOf(minColH);
   const maxColH = Math.max(...colHeights);
@@ -92,7 +91,6 @@ export const equalizeChildrenInColumns = (
     loadedImgs,
     columnsChildren[maxColHIndex],
   );
-
   if (maxColH - maxLastElH > minColH) {
     // move last el from max col to min col
     const lastEl = columnsChildren[maxColHIndex].pop();

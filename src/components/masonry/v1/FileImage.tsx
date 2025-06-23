@@ -21,19 +21,19 @@ export const FileImage = ({
 
   useEffect(() => {
     if (isVisible && !data) {
-      const loadedImg = loadedImgs.get(imgKey);
-      if (loadedImg?.srcDataURL) {
-        setData(() => loadedImg.srcDataURL);
-      } else {
-        getImgObjectURL(file)
-          .then((src) => {
-            imgDataEvent?.(imgKey, src);
-            flushSync(() => {
-              setData(() => src);
-            });
-          })
-          .catch(console.error);
-      }
+      // const loadedImg = loadedImgs.get(imgKey);
+      // if (loadedImg?.srcDataURL) {
+      // setData(() => loadedImg.srcDataURL);
+      // } else {
+      getImgObjectURL(file)
+        .then((src) => {
+          imgDataEvent?.(imgKey, src);
+          flushSync(() => {
+            setData(() => src);
+          });
+        })
+        .catch(console.error);
+      // }
     }
   }, [file, loadedImgs, imgKey, imgDataEvent, data, isVisible]);
 
