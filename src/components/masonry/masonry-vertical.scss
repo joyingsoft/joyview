@@ -14,7 +14,6 @@
       align-items: center;
       justify-content: center;
       color: #c62828;
-      // fontsize: 12px;
       text-align: center;
       padding: 8px;
     }
@@ -31,11 +30,16 @@
 
     img {
       width: 100%;
-      display: block;
-      width: 100%;
       height: auto;
       display: block;
       transition: opacity 0.1s ease;
+    }
+
+    .load-more {
+      display: flex;
+      flex: 1;
+      min-height: 1px;
+      background-color: transparent;
     }
   }
 }

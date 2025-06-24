@@ -1,29 +1,7 @@
 import { useContext, useEffect, useState, useCallback } from 'react';
 import { AppImgContext } from '../context/AppImgContext';
 import { getFilePathName, trimExtension } from '../utils/file-utils';
-import {
-  getResizedDataURL,
-  isDefinedResizeType,
-  loadImageFromFile,
-} from '../utils/img-utils';
-import { flushSync } from 'react-dom';
-
-const getImgDataURL = async (
-  file: File,
-  resize = false,
-  maxWidth = 1000,
-  maxHeight = 1000,
-) => {
-  if (resize && isDefinedResizeType(file.type)) {
-    const img = await loadImageFromFile(file);
-    if (img.width > maxWidth || img.height > maxHeight) {
-      return getResizedDataURL(img, maxWidth, maxHeight);
-    }
-    return img.src;
-  }
-  await (() => new Promise((r) => setTimeout(r, Math.random() * 1000 + 200)))();
-  return URL.createObjectURL(file);
-};
+import { getImgObjectURL } from '../utils/img-utils';
 
 interface Props {
   file: File;
@@ -36,7 +14,7 @@ export const FileToImg = ({ file, priority = false }: Props) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
 
-  const { loadedImgs, imgDataEvent, imgLoadedEvent } =
+  const { loadedImgs, isAllImgsLoaded, imgDataEvent, imgLoadedEvent } =
     useContext(AppImgContext);
 
   useEffect(() => {
@@ -48,12 +26,10 @@ export const FileToImg = ({ file, priority = false }: Props) => {
         setIsLoaded(true);
       }
     } else {
-      getImgDataURL(file)
+      getImgObjectURL(file)
         .then((src) => {
           imgDataEvent?.(imgKey, src);
-          flushSync(() => {
-            setImageSrc(src);
-          });
+          setImageSrc(src);
         })
         .catch(console.error);
     }
@@ -65,10 +41,15 @@ export const FileToImg = ({ file, priority = false }: Props) => {
     };
   }, [file, imgKey, loadedImgs, imgDataEvent, imageSrc]);
 
-  const handleLoad = useCallback(() => {
-    setIsLoaded(true);
-    imgLoadedEvent?.(imgKey, true);
-  }, [imgKey, imgLoadedEvent]);
+  const handleLoad = useCallback(
+    (e: React.SyntheticEvent<HTMLImageElement>) => {
+      setIsLoaded(true);
+      if (imgLoadedEvent && !isAllImgsLoaded) {
+        imgLoadedEvent?.(imgKey, true, e);
+      }
+    },
+    [imgKey, imgLoadedEvent, isAllImgsLoaded],
+  );
 
   const handleError = useCallback(() => {
     setHasError(true);
@@ -77,20 +58,7 @@ export const FileToImg = ({ file, priority = false }: Props) => {
 
   if (hasError) {
     return (
-      <div
-        style={{
-          width: '100%',
-          height: '150px',
-          backgroundColor: '#ffebee',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: '#c62828',
-          fontSize: '12px',
-          textAlign: 'center',
-          padding: '8px',
-        }}
-      >
+      <div className="error">
         ❌ Failed to load
         <br />
         {trimExtension(file.name)}
@@ -99,21 +67,7 @@ export const FileToImg = ({ file, priority = false }: Props) => {
   }
 
   if (!imageSrc) {
-    return (
-      <div
-        style={{
-          width: '100%',
-          height: '200px',
-          backgroundColor: '#f0f0f0',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: '#999',
-        }}
-      >
-        ⏳ Loading...
-      </div>
-    );
+    return <div className="loading">⏳ Loading...</div>;
   }
 
   return (
@@ -124,11 +78,7 @@ export const FileToImg = ({ file, priority = false }: Props) => {
       onError={handleError}
       loading={priority ? 'eager' : 'lazy'}
       style={{
-        width: '100%',
-        height: 'auto',
-        display: 'block',
-        opacity: isLoaded ? 1 : 0.8,
-        transition: 'opacity 0.3s ease',
+        opacity: isLoaded ? 1 : 0,
       }}
     />
   );
