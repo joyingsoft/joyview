@@ -18,7 +18,7 @@ export const App = () => {
     storedImageSpace && storedImageSpace?.length > 0
       ? Number(storedImageSpace)
       : null;
-  const [imageSpace, setImageSpace] = useState(storedImgSpace ?? 8);
+  const [imageSpace, setImageSpace] = useState(storedImgSpace ?? 4);
 
   const storedLanguage = LocalStorageUtils.load('language');
   useEffect(() => {

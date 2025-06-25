@@ -1,5 +1,4 @@
-import React from 'react';
-import type { MasonryVerticalColumnsChild } from './masonry-types';
+import React, { type ReactNode } from 'react';
 import type { AppLoadedImgProps } from '../../types/app-loaded-img-props';
 
 export const DEFAULT_COLUMNS = 1;
@@ -13,7 +12,7 @@ export const getChildrenInColumns = (
   columns: number,
   children: React.ReactNode,
 ) => {
-  const columnsChildren = new Array<MasonryVerticalColumnsChild[]>(columns);
+  const columnsChildren = new Array<ReactNode[]>(columns);
 
   const childrenArray = React.Children.toArray(children);
 
@@ -31,7 +30,7 @@ export const getChildrenInColumns = (
 };
 
 const getKeyValue = (key: string | number) => {
-  return key.toString().replace('.$', '');
+  return key.toString().replace('.0:$', '');
 };
 
 const HEIGHT_BASE_VALUE = 100;
@@ -47,19 +46,20 @@ const getEstimatedHeight = (
 
 const getColumnChildrenHeight = (
   loadedImgs: Map<string, AppLoadedImgProps>,
-  col: MasonryVerticalColumnsChild[],
-) =>
-  col
+  col: ReactNode[],
+) => {
+  return col
     .map((v) =>
       React.isValidElement(v) && v.key
         ? getEstimatedHeight(loadedImgs, v.key)
         : 0,
     )
     .reduce((p, c) => p + c, 0);
+};
 
 const getLastImgHeight = (
   loadedImgs: Map<string, AppLoadedImgProps>,
-  col: MasonryVerticalColumnsChild[],
+  col: ReactNode[],
 ) => {
   const lastImg = col[col.length - 1];
   return React.isValidElement(lastImg) && lastImg.key
@@ -77,13 +77,11 @@ const getLastImgHeight = (
  */
 export const equalizeChildrenInColumns = (
   loadedImgs: Map<string, AppLoadedImgProps>,
-  columnsChildren: MasonryVerticalColumnsChild[][],
+  columnsChildren: ReactNode[][],
 ) => {
-  const colHeights = [];
-  for (let i = 0; i < columnsChildren.length; i++) {
-    colHeights[i] = getColumnChildrenHeight(loadedImgs, columnsChildren[i]);
-  }
-
+  const colHeights = columnsChildren.map((column) =>
+    getColumnChildrenHeight(loadedImgs, column),
+  );
   const minColH = Math.min(...colHeights);
   const minColHIndex = colHeights.indexOf(minColH);
   const maxColH = Math.max(...colHeights);
@@ -93,7 +91,6 @@ export const equalizeChildrenInColumns = (
     loadedImgs,
     columnsChildren[maxColHIndex],
   );
-
   if (maxColH - maxLastElH > minColH) {
     // move last el from max col to min col
     const lastEl = columnsChildren[maxColHIndex].pop();

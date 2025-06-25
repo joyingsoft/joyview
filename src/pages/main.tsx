@@ -1,32 +1,19 @@
-import { useContext, useEffect, useState } from 'react';
-import { FileImage } from '../components/file-image';
+import { useContext, useEffect } from 'react';
 import { Container } from '../components/layout/container';
 import { Contents } from '../components/layout/contents';
 import { Sidebar } from '../components/layout/sidebar';
-import { MasonryVertical } from '../components/masonry/masonry-vertical';
 import { AppContext } from '../context/AppContext';
 import { AppImgContext } from '../context/AppImgContext';
-import { getFilePathName } from '../utils/file-utils';
 import { WelcomePage } from './sub/welcome-page';
-import { ImgSpaceContext } from '../context/ImgSpaceContext';
-import { ImgColumnContext } from '../context/ImgColumnContext';
-import { Slideshow } from '../components/slideshow/Slideshow';
+import { MasonryVertical as MasonryVerticalV1 } from '../components/masonry/v1/MasonryVertical';
+import { MasonryVertical as MasonryVerticalV2 } from '../components/masonry/v2/MasonryVertical';
+import { useParams } from 'react-router-dom';
 
 const MainViewDispatcher = () => {
-  const [slideshowIndex, setSlideshowIndex] = useState<number>();
   const { view, setView } = useContext(AppContext);
   const { imageFiles } = useContext(AppImgContext);
-  const { imageSpace } = useContext(ImgSpaceContext);
-  const { columns } = useContext(ImgColumnContext);
 
-  const handleFileChange = (isNext: boolean) => {
-    if (slideshowIndex === undefined || imageFiles.length === 0) return;
-
-    const nextIndex = isNext
-      ? (slideshowIndex + 1) % imageFiles.length
-      : (slideshowIndex - 1 + imageFiles.length) % imageFiles.length;
-    setSlideshowIndex(nextIndex);
-  };
+  const { version } = useParams<{ version?: string }>();
 
   useEffect(() => {
     if (imageFiles && imageFiles.length > 0 && view === 'welcome' && setView) {
@@ -36,31 +23,12 @@ const MainViewDispatcher = () => {
 
   switch (view) {
     case 'masonryVertical':
-      return (
-        <MasonryVertical
-          columns={columns}
-          cssProps={{ padding: `${imageSpace}px` }}
-        >
-          <Slideshow
-            onFileChange={handleFileChange}
-            onClose={() => setSlideshowIndex(undefined)}
-            file={
-              slideshowIndex !== undefined
-                ? imageFiles[slideshowIndex]
-                : undefined
-            }
-          />
-          {imageFiles.map((img, index) => (
-            <div
-              onClick={() => setSlideshowIndex(index)}
-              style={{ padding: `${imageSpace}px` }}
-              key={getFilePathName(img)}
-            >
-              <FileImage file={img} />
-            </div>
-          ))}
-        </MasonryVertical>
-      );
+      switch (version) {
+        case 'v2':
+          return <MasonryVerticalV2 />;
+        default:
+          return <MasonryVerticalV1 />;
+      }
     case 'welcome':
       return <WelcomePage />;
     default:

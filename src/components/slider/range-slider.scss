@@ -11,7 +11,7 @@ $track-radius: 6px !default;
   input[type='range'] {
     width: 100%; /* Specific width is required for Firefox. */
     outline: none;
-    appearance: none;;
+    appearance: none;
     -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
     -webkit-tap-highlight-color: transparent; /* for removing the highlight */
     border-radius: $track-radius;
@@ -25,7 +25,9 @@ $track-radius: 6px !default;
       background-color: var(--md-sys-color-primary);
       cursor: pointer;
       margin-top: -(calc(($thumb-height - $track-height) / 2)); /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
-      box-shadow: 0.1rem 0.1rem 0.1rem #00000054, 0 0 0.1rem #0d0d0d4f; /* Add cool effects to your sliders! */
+      box-shadow:
+        0.1rem 0.1rem 0.1rem #00000054,
+        0 0 0.1rem #0d0d0d4f; /* Add cool effects to your sliders! */
 
       transition-duration: 100ms;
       transition-delay: 50ms;

@@ -1,9 +1,7 @@
-import { type FC, memo } from 'react';
-import type { MasonryVerticalColumnsChild } from './masonry-types';
-import './masonry-vertical.scss';
+import { type FC, memo, type ReactNode } from 'react';
 
-export const MasonryVerticalColumns: FC<{
-  childrenInColumns: MasonryVerticalColumnsChild[][];
+export const MasonryVerticalItems: FC<{
+  childrenInColumns: ReactNode[][];
   classNames: string;
 }> = memo(({ childrenInColumns, classNames }) => {
   return (

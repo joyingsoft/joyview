@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 /**
  * @param element: the element to observe.
@@ -12,31 +12,33 @@ import { useCallback, useEffect, useRef, useState } from 'react';
  * https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API
  */
 export const useIsElementVisible = <T extends HTMLElement>(
+  options: IntersectionObserverInit = {},
   fullObserve = false,
 ) => {
   const [isVisible, setIsVisible] = useState<boolean>();
-  const elementRef = useRef<T | null>(null);
-
-  const setElement = useCallback((node: T | null) => {
-    elementRef.current = node;
-  }, []);
+  const [hasBeenVisible, setHasBeenVisible] = useState(false);
+  const elementRef = useRef<T>(null);
 
   useEffect(() => {
     const element = elementRef.current;
-
     if (!element) return;
 
     const observerCallback = ([entry]: IntersectionObserverEntry[]) => {
       if (entry) {
-        const visible = entry.isIntersecting;
-        setIsVisible(() => visible);
-        if (visible && !fullObserve) {
+        const isIntersecting = entry.isIntersecting;
+        setIsVisible(() => isIntersecting);
+
+        if (isIntersecting && !hasBeenVisible) {
+          setHasBeenVisible(true);
+        }
+
+        if (isIntersecting && !fullObserve) {
           stopObserve();
         }
       }
     };
 
-    const options: IntersectionObserverInit = {
+    const defaultOptions: IntersectionObserverInit = {
       /**
        * The element that is used as the viewport for checking visibility
        *  of the target. Must be the ancestor of the target.
@@ -70,7 +72,10 @@ export const useIsElementVisible = <T extends HTMLElement>(
       threshold: 0,
     };
 
-    const observer = new IntersectionObserver(observerCallback, options);
+    const observer = new IntersectionObserver(observerCallback, {
+      ...defaultOptions,
+      ...options,
+    });
 
     const stopObserve = () => {
       if (observer) {
@@ -90,7 +95,7 @@ export const useIsElementVisible = <T extends HTMLElement>(
     return () => {
       stopObserve();
     };
-  }, [isVisible, fullObserve, setElement]);
+  }, [isVisible, fullObserve, hasBeenVisible, options]);
 
-  return { isVisible, setElement };
+  return { isVisible, elementRef, hasBeenVisible };
 };

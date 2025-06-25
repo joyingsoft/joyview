@@ -30,9 +30,20 @@
 // 2. material design recommends #121212 as dark theme surface color
 // $color-dark-grey: #121212;
 
-$font-family-sans-serif: system-ui, -apple-system, 'Segoe UI', Roboto,
-  'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif,
-  'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji' !default;
+$font-family-sans-serif:
+  system-ui,
+  -apple-system,
+  'Segoe UI',
+  Roboto,
+  'Helvetica Neue',
+  Arial,
+  'Noto Sans',
+  'Liberation Sans',
+  sans-serif,
+  'Apple Color Emoji',
+  'Segoe UI Emoji',
+  'Segoe UI Symbol',
+  'Noto Color Emoji' !default;
 
 // Default xs
 $breakpoints: (
@@ -65,7 +76,9 @@ $transition-base: all $animation-duration ease-in-out !default;
 $transition-fade: opacity $animation-duration linear !default;
 $transition-collapse: height $animation-duration ease !default;
 $transition-collapse-width: width $animation-duration ease !default;
-$box-shadow: 0 1px 1px 0 rgb(66 66 66 / 8%), 0 1px 3px 1px rgb(66 66 66 / 16%) !default;
+$box-shadow:
+  0 1px 1px 0 rgb(66 66 66 / 8%),
+  0 1px 3px 1px rgb(66 66 66 / 16%) !default;
 $sidebar-width: 260px !default;
 
 :root {
