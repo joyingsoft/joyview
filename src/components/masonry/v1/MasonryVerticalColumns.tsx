@@ -1,4 +1,4 @@
-import { useContext, type ReactNode } from 'react';
+import { useContext, useMemo, type ReactNode } from 'react';
 import {
   mediaSizeNames,
   useMediaSize,
@@ -46,15 +46,26 @@ export function MasonryVerticalColumns({
   const { imageSpace } = useContext(ImgSpaceContext);
   const { columns } = useContext(ImgColumnContext);
   const { loadedImgs, hasAllRatios } = useContext(AppImgContext);
+  const childrenInColumns = useMemo(() => {
+    const cols = columns || mediaSizeCols.get(mediaSizeName) || DEFAULT_COLUMNS;
+    return getEqualizedChildrenInColumns(
+      cols,
+      hasAllRatios,
+      loadedImgs,
+      children,
+    );
+  }, [
+    columns,
+    mediaSizeCols,
+    mediaSizeName,
+    hasAllRatios,
+    loadedImgs,
+    children,
+  ]);
   return (
     <div className={classNames} style={{ padding: `${imageSpace}px` }}>
       <MasonryVerticalItems
-        childrenInColumns={getEqualizedChildrenInColumns(
-          columns || mediaSizeCols.get(mediaSizeName) || DEFAULT_COLUMNS,
-          hasAllRatios,
-          loadedImgs,
-          children,
-        )}
+        childrenInColumns={childrenInColumns}
         classNames={columnClassNames}
       />
     </div>

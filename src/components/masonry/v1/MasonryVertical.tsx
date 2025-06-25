@@ -13,6 +13,7 @@ export const MasonryVertical = () => {
   const { imageFiles } = useContext(AppImgContext);
   const { slideshowIndex, setSlideshowIndex, handleFileChange } =
     useSlideShow(imageFiles);
+
   return (
     <MasonryVerticalColumns>
       {imageFiles.map((file, index) => (

@@ -1,7 +1,6 @@
 import { type SyntheticEvent, useContext, useEffect, useState } from 'react';
 import { AppImgContext } from '../../../context/AppImgContext';
 import { getFilePathName, trimExtension } from '../../../utils/file-utils';
-import { flushSync } from 'react-dom';
 import { useIsElementVisible } from '../../../hooks/use-is-element-visible';
 import { getImgObjectURL } from '../../../utils/img-utils';
 
@@ -14,6 +13,7 @@ export const FileImage = ({
 }) => {
   const imgKey = getFilePathName(file);
   const [data, setData] = useState<string | undefined>(undefined);
+  // const [isLoaded, setIsLoaded] = useState(false);
   const { isVisible, elementRef } = useIsElementVisible<HTMLImageElement>();
 
   const { loadedImgs, imgDataEvent, imgLoadedEvent, isAllImgsLoaded } =
@@ -28,9 +28,9 @@ export const FileImage = ({
       getImgObjectURL(file)
         .then((src) => {
           imgDataEvent?.(imgKey, src);
-          flushSync(() => {
-            setData(() => src);
-          });
+          // flushSync(() => {
+          setData(() => src);
+          // });
         })
         .catch(console.error);
       // }
@@ -50,6 +50,7 @@ export const FileImage = ({
   }, [data, imgKey, imgLoadedEvent]);
 
   const imgOnLoadHandle = (e: SyntheticEvent<HTMLImageElement>) => {
+    // setIsLoaded(true);
     if (data && imgLoadedEvent && !isAllImgsLoaded) {
       imgLoadedEvent(imgKey, true, e);
     }
@@ -65,6 +66,12 @@ export const FileImage = ({
       }
       alt={trimExtension(file?.name)}
       onLoad={imgOnLoadHandle}
+      loading="lazy"
+      // style={
+      // {
+      // opacity: isLoaded ? 1 : 0.8,
+      // }
+      // }
     />
   );
 };
